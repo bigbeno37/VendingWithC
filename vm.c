@@ -9,6 +9,8 @@ int main(int argc, char ** argv)
         run_tests();
     }
 
+    VmSystem system;
+
     MenuItem menu[NUMBER_OF_MENU_ITEMS];
     initMenu(menu);
 
@@ -24,6 +26,8 @@ int main(int argc, char ** argv)
     }
 
     printf("Select your option (1-9): ");
+
+    loadData(&system, "stock.dat", "coins.dat");
 
     return EXIT_SUCCESS;
 }

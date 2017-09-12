@@ -23,6 +23,26 @@
  **/
 #define NUM_DENOMS 8
 
+/*
+ * The max length of the price of an item
+ */
+#define PRICE_LEN 5
+
+/*
+ * The max length of the quantity of an item
+ */
+#define ITEM_LEN 2
+
+/*
+ * The amount of seperators ( '|' ) in the stock file
+ */
+#define STOCK_SEPERATORS 4
+
+/*
+ * The maximum length of a valid line of input for a stock file
+ */
+#define MAX_STOCK_LINE_LEN ID_LEN + NAME_LEN + DESC_LEN + PRICE_LEN + ITEM_LEN + STOCK_SEPERATORS
+
 /**
  * A structure to represent a price. One of the problems with the floating
  * point formats in C like float and double is that they have minor issues

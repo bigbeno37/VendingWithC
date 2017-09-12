@@ -33,6 +33,9 @@ void systemFree(VmSystem * system)
 Boolean loadData(
     VmSystem * system, const char * stockFileName, const char * coinsFileName)
 {
+    loadStock(system, stockFileName);
+    loadCoins(system, coinsFileName);
+
     return FALSE;
 }
 
@@ -41,6 +44,22 @@ Boolean loadData(
  **/
 Boolean loadStock(VmSystem * system, const char * fileName)
 {
+    FILE *stock;
+    char stockData[MAX_STOCK_LINE_LEN];
+
+    stock = fopen(fileName, "r");
+
+    if (stock == NULL) {
+        // File not found
+        return FALSE;
+    }
+
+    if (fgets(stockData, MAX_STOCK_LINE_LEN, stock) != NULL) {
+        puts(stockData);
+    }
+
+    fclose(stock);
+
     return FALSE;
 }
 
