@@ -4,6 +4,7 @@
 
 #include <stdio.h>
 #include "../vm.h"
+#include "TestLinkedList.h"
 
 Boolean allTestsPassed = TRUE;
 
@@ -28,7 +29,24 @@ void dAssertThat(char *assertion, double expected, double actual) {
     }
 }
 
+void iAssertThat(char *assertion, int expected, int actual) {
+    if (expected != actual) {
+        printf("There was an error in test: %s\n", assertion);
+        allTestsPassed = FALSE;
+    }
+}
+
+void sAssertThat(char *assertion, char *expected, char *actual) {
+    if (strcmp(expected, actual) != 0) {
+        printf("There was an error in test: %s\n", assertion);
+        allTestsPassed = FALSE;
+    }
+}
+
 void run_tests() {
+    getSizeWillCorrectlyReturnSize();
+    getNodeWillCorrectlyReturnNode();
+
     if(!allTestsPassed) {
         puts("There were errors running tests!");
     }
