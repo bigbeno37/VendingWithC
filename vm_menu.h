@@ -8,6 +8,11 @@
  **/
 #define MENU_NAME_LEN 50
 
+/*
+ *
+ */
+#define NUMBER_OF_MENU_ITEMS 9
+
 /**
  * Represents a function that can be selected from the list of
  * menu_functions - creates a new type called a menu_function.
