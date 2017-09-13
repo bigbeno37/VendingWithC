@@ -9,7 +9,7 @@
 #define MENU_NAME_LEN 50
 
 /*
- *
+ * Amount of menu options to be selected
  */
 #define NUMBER_OF_MENU_ITEMS 9
 

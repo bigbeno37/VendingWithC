@@ -59,8 +59,8 @@ void initMenu(MenuItem * menu)
 MenuFunction getMenuChoice(MenuItem * menu)
 {
     Boolean correctInput = FALSE;
-    char buffer[CHOICE_SIZE];
-    strcpy( buffer, EMPTY_STRING );
+    int choice;
+    char *buffer = copyString(EMPTY_STRING);
 
     while ( !correctInput ) {
         correctInput = TRUE;
@@ -78,7 +78,7 @@ MenuFunction getMenuChoice(MenuItem * menu)
         }
     }
 
-    int choice = (int) strtol(buffer, NULL, 10 );
+    choice = (int) strtol(buffer, NULL, 10 );
 
     return menu[choice-1].function;
 }

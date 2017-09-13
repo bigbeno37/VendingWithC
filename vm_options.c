@@ -189,7 +189,7 @@ void displayItems(VmSystem * system)
     for (i = 1; i <= system->itemList->size; i++) {
         Stock *currentStock = getNthNode(system->itemList, i)->data;
 
-        printf(currentStock->id);
+        printf("%s", currentStock->id);
         printNSpaces((int) (idLength - strlen(currentStock->id)));
         printf(" | %s", currentStock->name);
         printNSpaces((int) (nameLength - strlen(currentStock->name)));
@@ -205,7 +205,26 @@ void displayItems(VmSystem * system)
  * This function implements requirement 5 of the assignment specification.
  **/
 void purchaseItem(VmSystem * system)
-{ }
+{
+    Stock *stock;
+
+    puts("Purchase item");
+    puts("-------------");
+    printf("Please enter the id of the item you wish to purchase: ");
+
+    char *input = getUserInput(ID_LEN);
+
+    /* If the specified stock exists... */
+    stock = getStockWithID(input, system->itemList);
+    if (stock) {
+        printf("You have selected \"%s\t%s\". This will cost you $%d.%02d.\n", stock->name,
+        stock->desc, stock->price.dollars, stock->price.cents);
+
+        puts("Please hand over the money – type in the value of each note/coin in cents.\n"
+                     "Press enter on a new and empty line to cancel this purchase:");
+        printf("You still need to give us $%d.%02d: ", stock->price.dollars, stock->price.cents);
+    }
+}
 
 /**
  * You must save all data to the data files that were provided on the command

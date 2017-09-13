@@ -9,3 +9,4 @@
 
 void getSizeWillCorrectlyReturnSize();
 void getNodeWillCorrectlyReturnNode();
+void nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists();

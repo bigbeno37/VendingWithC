@@ -12,3 +12,4 @@
 void addNode(List *list, Stock *data);
 unsigned int getListSize(List *list);
 Node *getNthNode(List *list, int index);
+Stock *getStockWithID(char *id, List *list);

@@ -39,7 +39,21 @@ void iAssertThat(char *assertion, int expected, int actual) {
 }
 
 void sAssertThat(char *assertion, char *expected, char *actual) {
-    if (strcmp(expected, actual) != 0) {
+    if (strcmp(expected, actual)) {
+        printf("There was an error in test: %s\n", assertion);
+        allTestsPassed = FALSE;
+    }
+}
+
+void assertNull(char *assertion, void *actual) {
+    if (actual) {
+        printf("There was an error in test: %s\n", assertion);
+        allTestsPassed = FALSE;
+    }
+}
+
+void assertNotNull(char *assertion, void *actual) {
+    if (!actual) {
         printf("There was an error in test: %s\n", assertion);
         allTestsPassed = FALSE;
     }
@@ -50,8 +64,9 @@ void run_tests() {
 
     getSizeWillCorrectlyReturnSize();
     getNodeWillCorrectlyReturnNode();
-    loadStockCorrectlyLoadsStock();
+    nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists();
 
+    loadStockCorrectlyLoadsStock();
     createStockFromLineCorrectlyCreatesStock();
 
     if(!allTestsPassed) {

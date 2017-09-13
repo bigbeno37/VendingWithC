@@ -60,3 +60,28 @@ int getDigits(int n) {
 
     return 2;
 }
+
+char *getUserInput(int bufferSize) {
+    Boolean correctInput = FALSE;
+    char *buffer = malloc((size_t) bufferSize+EXTRA_SPACES);
+
+    while ( !correctInput ) {
+        correctInput = TRUE;
+
+        /* Get the input and store it in name */
+        fgets( buffer, bufferSize+EXTRA_SPACES, stdin );
+
+        /* If name doesn't have a newline character (and thus the input was bigger than 20) */
+        /* remove overflowed characters and ask for new input */
+        if ( !strchr( buffer, '\n' )) {
+            printf( "\nBuffer overflow! Please enter a valid choice: " );
+            readRestOfLine();
+
+            correctInput = FALSE;
+        }
+    }
+
+    buffer[strlen(buffer)-1] = '\0';
+
+    return copyString(buffer);
+}

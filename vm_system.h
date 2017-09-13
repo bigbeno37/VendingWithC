@@ -41,7 +41,7 @@
 /*
  * The maximum length of a valid line of input for a stock file
  */
-#define MAX_STOCK_LINE_LEN ID_LEN + NAME_LEN + DESC_LEN + PRICE_LEN + ITEM_LEN + STOCK_SEPERATORS
+#define MAX_STOCK_LINE_LEN (ID_LEN + NAME_LEN + DESC_LEN + PRICE_LEN + ITEM_LEN + STOCK_SEPERATORS)
 
 /**
  * A structure to represent a price. One of the problems with the floating

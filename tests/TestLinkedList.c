@@ -42,3 +42,24 @@ void getNodeWillCorrectlyReturnNode() {
     sAssertThat("After adding three nodes, I can retrieve the third node", "2", getNthNode(&list, 3)->data->id);
     sAssertThat("After adding three nodes, I can retrieve the second node", "1", getNthNode(&list, 2)->data->id);
 }
+
+void nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists() {
+    List *list = malloc(sizeof(List));
+    Stock *stock = malloc(sizeof(Stock));
+    Stock *newStock = malloc(sizeof(Stock));
+    list->head = NULL;
+
+    strcpy(stock->id, "2");
+    strcpy(newStock->id, "1");
+
+    assertNull("Before adding Stock with ID 2, it will not exist", getStockWithID("2", list));
+
+    addNode(list, stock);
+
+    assertNull("Stock with ID 1 will be NULL", getStockWithID("1", list));
+    assertNotNull("Stock with ID 2 will exist", getStockWithID("2", list));
+
+    addNode(list, newStock);
+
+    assertNotNull("After adding stock with ID 1, it will now exist", getStockWithID("1", list));
+}

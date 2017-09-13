@@ -47,3 +47,15 @@ Node *getNthNode(List *list, int index) {
 
     return node;
 }
+
+Stock *getStockWithID(char *id, List *list) {
+    int i;
+
+    for (i = 1; i <= list->size; i++) {
+        if (strcmp(getNthNode(list, i)->data->id, id) == 0) {
+            return getNthNode(list, i)->data;
+        }
+    }
+
+    return NULL;
+}

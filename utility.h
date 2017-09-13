@@ -17,7 +17,7 @@ typedef enum boolean
 #define NEW_LINE_SPACE 1
 #define NULL_SPACE 1
 
-#define CHOICE_SIZE 1 + NEW_LINE_SPACE + NULL_SPACE
+#define CHOICE_SIZE (1 + EXTRA_SPACES)
 
 /**
  * This is used to compensate for the extra character spaces taken up by
@@ -37,6 +37,7 @@ Boolean fileExists(char *file);
 void printNSpaces(int n);
 void printNDashes(int n);
 int getDigits(int n);
+char *getUserInput(int bufferSize);
 
 
 #endif

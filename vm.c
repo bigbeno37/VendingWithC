@@ -36,8 +36,10 @@ int main(int argc, char ** argv)
         printf("%i. %s\n", i+1, menu[i].text);
     }
 
-    printf("Select your option (1-9): ");
-    getMenuChoice(menu)(system);
+    while (TRUE) {
+        printf("Select your option (1-9): ");
+        getMenuChoice(menu)(system);
+    }
 
     return EXIT_SUCCESS;
 }
