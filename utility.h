@@ -40,6 +40,7 @@ void printNSpaces(int n);
 void printNDashes(int n);
 int getDigits(int n);
 char *getUserInput(int bufferSize);
+int toInt(char *string);
 
 
 #endif

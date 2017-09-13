@@ -11,7 +11,7 @@
  * convert Denomination to coin value, deducting coins from register, etc...
  */
 Boolean isValidDenomination(char *value, VmSystem *system) {
-    int i, coinValue = (int) strtol(value, NULL, 10);
+    int i, coinValue = toInt(value);
 
     for (i = 0; i < LEN(system->cashRegister); i++) {
         if (coinValue == system->cashRegister[i].count) {

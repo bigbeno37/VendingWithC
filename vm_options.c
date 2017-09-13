@@ -92,10 +92,10 @@ Stock *createStockFromLine(char *line) {
     char *dollarsString = strtok(priceString, priceSeperator);
     char *centsString = strtok(NULL, priceSeperator);
 
-    unsigned int dollars = (unsigned int) strtol(dollarsString, NULL, 10);
-    unsigned int cents = (unsigned int) strtol(centsString, NULL, 10);
+    unsigned int dollars = (unsigned int) toInt(dollarsString);
+    unsigned int cents = (unsigned int) toInt(centsString);
 
-    unsigned int quantity = (unsigned int) strtol(quantityString, NULL, 10);
+    unsigned int quantity = (unsigned int) toInt(quantityString);
     Stock *stock = malloc(sizeof(Stock));
 
     Price price;
@@ -270,7 +270,7 @@ void purchaseItem(VmSystem * system)
         if (strcmp(purchaseInput, "/n") == 0) {
             return;
         } else if (isValidDenomination(purchaseInput, system)) {
-            amountOwed-=strtol(purchaseInput, NULL, 10);
+            amountOwed -= toInt(purchaseInput);
             printf("%d", amountOwed);
         }
     }

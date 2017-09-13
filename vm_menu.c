@@ -78,7 +78,7 @@ MenuFunction getMenuChoice(MenuItem * menu)
         }
     }
 
-    choice = (int) strtol(buffer, NULL, 10 );
+    choice = toInt(buffer);
 
     return menu[choice-1].function;
 }

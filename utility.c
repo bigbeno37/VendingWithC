@@ -85,3 +85,7 @@ char *getUserInput(int bufferSize) {
 
     return copyString(buffer);
 }
+
+int toInt(char *string) {
+    return (int) strtol(string, NULL, 10);
+}
