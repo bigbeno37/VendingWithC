@@ -71,7 +71,7 @@ Boolean loadStock(VmSystem * system, const char * fileName)
 
     fclose(stockFile);
 
-    return FALSE;
+    return TRUE;
 }
 
 /*
@@ -116,6 +116,44 @@ Stock *createStockFromLine(char *line) {
  **/
 Boolean loadCoins(VmSystem * system, const char * fileName)
 {
+    // TODO
+    // Load in denominations from file
+    Coin fiveCents, tenCents, twentyCents, fiftyCents, oneDollar,
+    twoDollars, fiveDollars, tenDollars;
+
+    fiveCents.count = 5;
+    fiveCents.denom = FIVE_CENTS;
+
+    tenCents.count = 10;
+    tenCents.denom = TEN_CENTS;
+
+    twentyCents.count = 20;
+    twentyCents.denom = TWENTY_CENTS;
+
+    fiftyCents.count = 50;
+    fiftyCents.denom = FIFTY_CENTS;
+
+    oneDollar.count = 100;
+    oneDollar.denom = ONE_DOLLAR;
+
+    twoDollars.count = 200;
+    twoDollars.denom = TWO_DOLLARS;
+
+    fiveDollars.count = 500;
+    fiveDollars.denom = FIVE_DOLLARS;
+
+    tenDollars.count = 1000;
+    tenDollars.denom = TEN_DOLLARS;
+
+    system->cashRegister[0] = fiveCents;
+    system->cashRegister[1] = tenCents;
+    system->cashRegister[2] = twentyCents;
+    system->cashRegister[3] = fiftyCents;
+    system->cashRegister[4] = oneDollar;
+    system->cashRegister[5] = twoDollars;
+    system->cashRegister[6] = fiveDollars;
+    system->cashRegister[7] = tenDollars;
+
     return FALSE;
 }
 
@@ -223,6 +261,8 @@ void purchaseItem(VmSystem * system)
         puts("Please hand over the money – type in the value of each note/coin in cents.\n"
                      "Press enter on a new and empty line to cancel this purchase:");
         printf("You still need to give us $%d.%02d: ", stock->price.dollars, stock->price.cents);
+
+
     }
 }
 

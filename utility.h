@@ -27,6 +27,8 @@ typedef enum boolean
 
 #define EMPTY_STRING ""
 
+#define LEN(array)  (sizeof(array) / sizeof((array)[0]))
+
 /**
  * Call this function whenever you detect buffer overflow.
  **/

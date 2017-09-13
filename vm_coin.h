@@ -10,4 +10,6 @@
 
 #define COIN_DELIM ","
 
+Boolean isValidDenomination(int value, VmSystem *system);
+
 #endif
