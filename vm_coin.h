@@ -10,6 +10,7 @@
 
 #define COIN_DELIM ","
 
-Boolean isValidDenomination(int value, VmSystem *system);
+Boolean isValidDenomination(char *value, VmSystem *system);
+int getDecimalValue(Price price);
 
 #endif

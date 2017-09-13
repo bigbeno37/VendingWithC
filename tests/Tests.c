@@ -64,6 +64,7 @@ void run_tests() {
     createStockFromLineCorrectlyCreatesStock();
 
     isValidDenominationWillDetermineValidDenomination();
+    getDecimalValueWillCorrectlyDetermineCorrectValue();
 
     if(!allTestsPassed) {
         puts("There were errors running tests!");

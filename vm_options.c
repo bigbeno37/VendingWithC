@@ -116,8 +116,8 @@ Stock *createStockFromLine(char *line) {
  **/
 Boolean loadCoins(VmSystem * system, const char * fileName)
 {
-    // TODO
-    // Load in denominations from file
+    /* TODO
+     Load in denominations from file */
     Coin fiveCents, tenCents, twentyCents, fiftyCents, oneDollar,
     twoDollars, fiveDollars, tenDollars;
 
@@ -245,12 +245,14 @@ void displayItems(VmSystem * system)
 void purchaseItem(VmSystem * system)
 {
     Stock *stock;
+    char *input, *purchaseInput;
+    int amountOwed;
 
     puts("Purchase item");
     puts("-------------");
     printf("Please enter the id of the item you wish to purchase: ");
 
-    char *input = getUserInput(ID_LEN);
+    input = getUserInput(ID_LEN);
 
     /* If the specified stock exists... */
     stock = getStockWithID(input, system->itemList);
@@ -262,7 +264,15 @@ void purchaseItem(VmSystem * system)
                      "Press enter on a new and empty line to cancel this purchase:");
         printf("You still need to give us $%d.%02d: ", stock->price.dollars, stock->price.cents);
 
+        amountOwed = getDecimalValue(stock->price);
 
+        purchaseInput = getUserInput(4);
+        if (strcmp(purchaseInput, "/n") == 0) {
+            return;
+        } else if (isValidDenomination(purchaseInput, system)) {
+            amountOwed-=strtol(purchaseInput, NULL, 10);
+            printf("%d", amountOwed);
+        }
     }
 }
 

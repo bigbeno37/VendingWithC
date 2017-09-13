@@ -10,14 +10,18 @@
  * init coins array, insert coin, change coin count for Denomination,
  * convert Denomination to coin value, deducting coins from register, etc...
  */
-Boolean isValidDenomination(int value, VmSystem *system) {
-    int i;
+Boolean isValidDenomination(char *value, VmSystem *system) {
+    int i, coinValue = (int) strtol(value, NULL, 10);
 
     for (i = 0; i < LEN(system->cashRegister); i++) {
-        if (value == system->cashRegister[i].count) {
+        if (coinValue == system->cashRegister[i].count) {
             return TRUE;
         }
     }
 
     return FALSE;
+}
+
+int getDecimalValue(Price price) {
+    return 100*price.dollars + price.cents;
 }
