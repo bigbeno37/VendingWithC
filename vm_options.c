@@ -1,5 +1,5 @@
 #include "vm_options.h"
-#include "vm_linkedlist.h"
+#include "vm_stock.h"
 #include "utility.h"
 #include <string.h>
 
@@ -55,17 +55,21 @@ Boolean loadStock(VmSystem * system, const char * fileName)
     FILE *stockFile;
     char stockData[MAX_STOCK_LINE_LEN];
 
-    stockFile = fopen(fileName, "r");
-
-    if (stockFile == NULL) {
+    if (!fileExists((char *) fileName)) {
         puts("Error: File not found!");
 
         return FALSE;
     }
 
+    /* Open the file for read only access */
+    stockFile = fopen(fileName, "r");
+
+    /* While there is another line to read, continue reading lines
+     * and generating Stock instances from them*/
     while (fgets(stockData, MAX_STOCK_LINE_LEN, stockFile) != NULL) {
         Stock *stock = createStockFromLine(stockData);
 
+        /* For each stock instance created, at it to the linked list */
         addNode(system->itemList, stock);
     }
 
@@ -78,19 +82,19 @@ Boolean loadStock(VmSystem * system, const char * fileName)
  * Return a stock instance based on the line input
  */
 Stock *createStockFromLine(char *line) {
-    char seperator[2] = "|";
-    char priceSeperator[2] = ".";
+    char separator[2] = "|";
+    char priceSeparator[2] = ".";
 
     char *lineCopy = copyString(line);
 
-    char *id = strtok(lineCopy, seperator);
-    char *name = strtok(NULL, seperator);
-    char *description = strtok(NULL, seperator);
-    char *priceString = strtok(NULL, seperator);
-    char *quantityString = strtok(NULL, seperator);
+    char *id = strtok(lineCopy, separator);
+    char *name = strtok(NULL, separator);
+    char *description = strtok(NULL, separator);
+    char *priceString = strtok(NULL, separator);
+    char *quantityString = strtok(NULL, separator);
 
-    char *dollarsString = strtok(priceString, priceSeperator);
-    char *centsString = strtok(NULL, priceSeperator);
+    char *dollarsString = strtok(priceString, priceSeparator);
+    char *centsString = strtok(NULL, priceSeparator);
 
     unsigned int dollars = (unsigned int) toInt(dollarsString);
     unsigned int cents = (unsigned int) toInt(centsString);
@@ -180,11 +184,13 @@ Boolean saveCoins(VmSystem * system)
 void displayItems(VmSystem * system)
 {
     int i;
+    /* Amount of characters in each word */
     int idLength = 2, nameLength = 4, quantityLength = 9, priceLength = 5;
     int currentIDLength, currentNameLength, currentQuantityLength, currentPriceLength;
 
     printf("Items Menu\n\n");
 
+    /* Determine the minimum column sizes */
     for (i = 1; i <= system->itemList->size; i++) {
 
         currentIDLength = (int) strlen(getNthNode(system->itemList, i)->data->id);
@@ -210,6 +216,7 @@ void displayItems(VmSystem * system)
         }
     }
 
+    /* Print each column with the respective spacing required */
     printf("ID");
     printNSpaces((int) (idLength - strlen("ID")));
     printf(" | Name");
@@ -220,10 +227,12 @@ void displayItems(VmSystem * system)
     printNSpaces((int) (priceLength - strlen("Price")));
     puts(EMPTY_STRING);
 
+    /* Print the dashes to separate the heading from the data */
     printNDashes(idLength + nameLength + quantityLength + priceLength + COLUMN_SPACES);
-
     puts(EMPTY_STRING);
 
+    /* Print out each stock item on their own row, showing ID, stock amount,
+     * quantity, and price */
     for (i = 1; i <= system->itemList->size; i++) {
         Stock *currentStock = getNthNode(system->itemList, i)->data;
 

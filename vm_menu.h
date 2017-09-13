@@ -30,5 +30,6 @@ typedef struct menu_item
 
 void initMenu(MenuItem * menu);
 MenuFunction getMenuChoice(MenuItem * menu);
+void displayMenu(MenuItem *menu);
 
 #endif

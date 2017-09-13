@@ -1,12 +1,12 @@
-/*
- * Created by bigbeno37 on 13/09/17.
- */
-
 #include "TestCoins.h"
 #include "../vm_system.h"
 #include "../vm_options.h"
 #include "Tests.h"
 
+/*
+ * Determine if isValid() will return true if passed in value is a
+ * correct coin denomination
+ */
 void isValidDenominationWillDetermineValidDenomination() {
     VmSystem *system = malloc(sizeof(VmSystem));
     loadCoins(system, "");
@@ -22,6 +22,10 @@ void isValidDenominationWillDetermineValidDenomination() {
     assertFalse("105 is not a valid denomination", isValidDenomination("105", system));
 }
 
+/*
+ * Determine if getDecimalValue will return anticipated value given
+ * a Price
+ */
 void getDecimalValueWillCorrectlyDetermineCorrectValue() {
     Price price, newPrice;
     price.cents = 50;

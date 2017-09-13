@@ -82,3 +82,20 @@ MenuFunction getMenuChoice(MenuItem * menu)
 
     return menu[choice-1].function;
 }
+
+/* Iterate through all menu items, and display them
+ * to the screen */
+void displayMenu(MenuItem *menu) {
+    int i;
+
+    for (i = 0; i < NUMBER_OF_MENU_ITEMS; i++) {
+
+        if (i == 0) {
+            puts("Main Menu:");
+        } else if (i == 3) {
+            puts("Administrator-Only Menu:");
+        }
+
+        printf("%i. %s\n", i+1, menu[i].text);
+    }
+}

@@ -11,4 +11,9 @@
 
 #define STOCK_DELIM "|"
 
+unsigned int getListSize(List *list);
+void addNode(List *list, Stock *data);
+Node *getNthNode(List *list, int n);
+Stock *getStockWithID(char *id, List *list);
+
 #endif

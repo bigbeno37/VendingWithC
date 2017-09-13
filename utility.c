@@ -16,6 +16,9 @@ void readRestOfLine()
     clearerr(stdin);
 }
 
+/*
+ * Returns the string passed in without reference to a pointer
+ */
 char *copyString(char *string) {
     int i;
     char *toBeCopied = malloc(strlen(string)+1);
@@ -27,6 +30,9 @@ char *copyString(char *string) {
     return toBeCopied;
 }
 
+/*
+ * Determines if a file exists given a specific path
+ */
 Boolean fileExists(char *path) {
     FILE *file = fopen(path, "r");
 
@@ -37,6 +43,9 @@ Boolean fileExists(char *path) {
     return TRUE;
 }
 
+/*
+ * Prints N amounts of the character passed in
+ */
 void printNCharacters(int n, char *string) {
     int i;
 
@@ -45,14 +54,23 @@ void printNCharacters(int n, char *string) {
     }
 }
 
+/*
+ * Utilising the method above, print N amounts of spaces
+ */
 void printNSpaces(int n) {
     printNCharacters(n, " ");
 }
 
+/*
+ * Utilising the method above, print N amounts of dashes
+ */
 void printNDashes(int n) {
     printNCharacters(n, "-");
 }
 
+/*
+ * Get the amount of digits of a number 'n'
+ */
 int getDigits(int n) {
     if (n < 10) {
         return 1;
@@ -61,6 +79,9 @@ int getDigits(int n) {
     return 2;
 }
 
+/*
+ * Return the user input to 'bufferSize' characters
+ */
 char *getUserInput(int bufferSize) {
     Boolean correctInput = FALSE;
     char *buffer = malloc((size_t) bufferSize+EXTRA_SPACES);
@@ -86,6 +107,9 @@ char *getUserInput(int bufferSize) {
     return copyString(buffer);
 }
 
+/*
+ * Converts a string to an int using strtol
+ */
 int toInt(char *string) {
     return (int) strtol(string, NULL, 10);
 }
