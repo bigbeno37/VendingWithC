@@ -37,12 +37,20 @@ Boolean fileExists(char *path) {
     return TRUE;
 }
 
-void printNSpaces(int n) {
+void printNCharacters(int n, char *string) {
     int i;
 
     for (i = 0; i < n; i++) {
-        printf(" ");
+        printf("%s", string);
     }
+}
+
+void printNSpaces(int n) {
+    printNCharacters(n, " ");
+}
+
+void printNDashes(int n) {
+    printNCharacters(n, "-");
 }
 
 int getDigits(int n) {

@@ -35,6 +35,7 @@ void readRestOfLine();
 char *copyString(char *string);
 Boolean fileExists(char *file);
 void printNSpaces(int n);
+void printNDashes(int n);
 int getDigits(int n);
 
 

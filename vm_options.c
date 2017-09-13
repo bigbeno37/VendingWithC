@@ -182,6 +182,10 @@ void displayItems(VmSystem * system)
     printNSpaces((int) (priceLength - strlen("Price")));
     puts(EMPTY_STRING);
 
+    printNDashes(idLength + nameLength + quantityLength + priceLength + COLUMN_SPACES);
+
+    puts(EMPTY_STRING);
+
     for (i = 1; i <= system->itemList->size; i++) {
         Stock *currentStock = getNthNode(system->itemList, i)->data;
 
@@ -191,7 +195,7 @@ void displayItems(VmSystem * system)
         printNSpaces((int) (nameLength - strlen(currentStock->name)));
         printf(" | %d", currentStock->onHand);
         printNSpaces(quantityLength - getDigits(currentStock->onHand));
-        printf(" | $ %d.%d", currentStock->price.dollars, currentStock->price.cents);
+        printf(" | $ %d.%02d", currentStock->price.dollars, currentStock->price.cents);
         puts(EMPTY_STRING);
     }
 }

@@ -31,4 +31,11 @@ Stock *createStockFromLine(char *line);
  */
 #define EXTRA_CHAR_IN_PRICE 5
 
+/*
+ * Spaces left over from the column padding
+ * Each bit of padding adds three extra spaces
+ * 3 columns to pad * 3 spaces = 9 extra spaces
+ */
+#define COLUMN_SPACES 9
+
 #endif
