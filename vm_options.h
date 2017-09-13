@@ -22,4 +22,6 @@ void resetStock(VmSystem * system);
 void resetCoins(VmSystem * system);
 void abortProgram(VmSystem * system);
 
+Stock *createStockFromLine(char *line);
+
 #endif

@@ -1,4 +1,5 @@
 #include "vm_options.h"
+#include "vm_linkedlist.h"
 
 /**
  * vm_options.c this is where you need to implement the system handling
@@ -44,23 +45,63 @@ Boolean loadData(
  **/
 Boolean loadStock(VmSystem * system, const char * fileName)
 {
-    FILE *stock;
+    FILE *stockFile;
     char stockData[MAX_STOCK_LINE_LEN];
 
-    stock = fopen(fileName, "r");
+    stockFile = fopen(fileName, "r");
 
-    if (stock == NULL) {
+    if (stockFile == NULL) {
         // File not found
         return FALSE;
     }
 
-    if (fgets(stockData, MAX_STOCK_LINE_LEN, stock) != NULL) {
-        puts(stockData);
+    while (fgets(stockData, MAX_STOCK_LINE_LEN, stockFile) != NULL) {
+        Stock *stock = createStockFromLine(stockData);
+
+        addNode(system->itemList, stock);
     }
 
-    fclose(stock);
+    fclose(stockFile);
 
     return FALSE;
+}
+
+/*
+ * Return a stock instance based on the line input
+ */
+Stock *createStockFromLine(char *line) {
+    char seperator[2] = "|";
+    char priceSeperator[2] = ".";
+
+    char *lineCopy = strdup(line);
+
+    char *id = strtok(lineCopy, seperator);
+    char *name = strtok(NULL, seperator);
+    char *description = strtok(NULL, seperator);
+    char *priceString = strtok(NULL, seperator);
+    char *quantityString = strtok(NULL, seperator);
+
+    char *dollarsString = strtok(priceString, priceSeperator);
+    char *centsString = strtok(NULL, priceSeperator);
+
+    unsigned int dollars = (unsigned int) strtol(dollarsString, NULL, 10);
+    unsigned int cents = (unsigned int) strtol(centsString, NULL, 10);
+
+    Price price;
+    price.dollars = dollars;
+    price.cents = cents;
+
+    unsigned int quantity = (unsigned int) strtol(quantityString, NULL, 10);
+
+    Stock *stock = malloc(sizeof(Stock));
+
+    stock->onHand = quantity;
+    stock->price = price;
+    strcpy(stock->id, id);
+    strcpy(stock->name, name);
+    strcpy(stock->desc, description);
+
+    return stock;
 }
 
 /**

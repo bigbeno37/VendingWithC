@@ -5,6 +5,7 @@
 #include <stdio.h>
 #include "../vm.h"
 #include "TestLinkedList.h"
+#include "TestLoadData.h"
 
 Boolean allTestsPassed = TRUE;
 
@@ -46,6 +47,9 @@ void sAssertThat(char *assertion, char *expected, char *actual) {
 void run_tests() {
     getSizeWillCorrectlyReturnSize();
     getNodeWillCorrectlyReturnNode();
+    loadStockCorrectlyLoadsStock();
+
+    createStockFromLineCorrectlyCreatesStock();
 
     if(!allTestsPassed) {
         puts("There were errors running tests!");

@@ -9,7 +9,11 @@ int main(int argc, char ** argv)
         run_tests();
     }
 
-    VmSystem system;
+    VmSystem *system = malloc(sizeof(VmSystem));
+    List *list = malloc(sizeof(VmSystem));
+    list->head = NULL;
+    list->size = 0;
+    system->itemList = list;
 
     MenuItem menu[NUMBER_OF_MENU_ITEMS];
     initMenu(menu);
@@ -27,7 +31,7 @@ int main(int argc, char ** argv)
 
     printf("Select your option (1-9): ");
 
-    loadData(&system, "stock.dat", "coins.dat");
+    loadData(system, "stock.dat", "coins.dat");
 
     return EXIT_SUCCESS;
 }
