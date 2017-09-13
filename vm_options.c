@@ -140,7 +140,61 @@ Boolean saveCoins(VmSystem * system)
  * This is the data loaded into the linked list in the requirement 2.
  **/
 void displayItems(VmSystem * system)
-{ }
+{
+    int i;
+    int idLength = 2, nameLength = 4, quantityLength = 9, priceLength = 5;
+    int currentIDLength, currentNameLength, currentQuantityLength, currentPriceLength;
+
+    printf("Items Menu\n\n");
+
+    for (i = 1; i <= system->itemList->size; i++) {
+
+        currentIDLength = (int) strlen(getNthNode(system->itemList, i)->data->id);
+        currentNameLength = (int) strlen(getNthNode(system->itemList, i)->data->name);
+        currentQuantityLength = getDigits(getNthNode(system->itemList, i)->data->onHand);
+        currentPriceLength = getDigits(getNthNode(system->itemList, i)->data->price.dollars)
+                + EXTRA_CHAR_IN_PRICE;
+
+        if (currentIDLength > idLength) {
+            idLength = currentIDLength;
+        }
+
+        if (currentNameLength > nameLength) {
+            nameLength = currentNameLength;
+        }
+
+        if (currentQuantityLength > quantityLength) {
+            quantityLength = currentQuantityLength;
+        }
+
+        if (currentPriceLength > priceLength) {
+            priceLength = currentPriceLength;
+        }
+    }
+
+    printf("ID");
+    printNSpaces((int) (idLength - strlen("ID")));
+    printf(" | Name");
+    printNSpaces((int) (nameLength - strlen("Name")));
+    printf(" | Available");
+    printNSpaces((int) (quantityLength - strlen("Available")));
+    printf(" | Price");
+    printNSpaces((int) (priceLength - strlen("Price")));
+    puts(EMPTY_STRING);
+
+    for (i = 1; i <= system->itemList->size; i++) {
+        Stock *currentStock = getNthNode(system->itemList, i)->data;
+
+        printf(currentStock->id);
+        printNSpaces((int) (idLength - strlen(currentStock->id)));
+        printf(" | %s", currentStock->name);
+        printNSpaces((int) (nameLength - strlen(currentStock->name)));
+        printf(" | %d", currentStock->onHand);
+        printNSpaces(quantityLength - getDigits(currentStock->onHand));
+        printf(" | $ %d.%d", currentStock->price.dollars, currentStock->price.cents);
+        puts(EMPTY_STRING);
+    }
+}
 
 /**
  * This option allows the user to purchase an item.

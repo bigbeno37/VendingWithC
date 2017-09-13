@@ -17,6 +17,8 @@ typedef enum boolean
 #define NEW_LINE_SPACE 1
 #define NULL_SPACE 1
 
+#define CHOICE_SIZE 1 + NEW_LINE_SPACE + NULL_SPACE
+
 /**
  * This is used to compensate for the extra character spaces taken up by
  * the '\n' and '\0' when input is read through fgets().
@@ -32,6 +34,8 @@ void readRestOfLine();
 
 char *copyString(char *string);
 Boolean fileExists(char *file);
+void printNSpaces(int n);
+int getDigits(int n);
 
 
 #endif

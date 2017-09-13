@@ -24,4 +24,11 @@ void abortProgram(VmSystem * system);
 
 Stock *createStockFromLine(char *line);
 
+/*
+ * The amount of extra characters in the displayed price
+ * $ + .XX
+ * Dollar sign + space + period + cents to two decimals = 5
+ */
+#define EXTRA_CHAR_IN_PRICE 5
+
 #endif

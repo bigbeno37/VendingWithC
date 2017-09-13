@@ -23,6 +23,7 @@ int main(int argc, char ** argv)
 
     initMenu(menu);
     systemInit(system);
+    loadData(system, argv[1], "coins.dat");
 
     for (i = 0; i < NUMBER_OF_MENU_ITEMS; i++) {
 
@@ -36,8 +37,7 @@ int main(int argc, char ** argv)
     }
 
     printf("Select your option (1-9): ");
-
-    loadData(system, "stock.dat", "coins.dat");
+    getMenuChoice(menu)(system);
 
     return EXIT_SUCCESS;
 }

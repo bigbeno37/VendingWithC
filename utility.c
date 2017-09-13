@@ -36,3 +36,19 @@ Boolean fileExists(char *path) {
 
     return TRUE;
 }
+
+void printNSpaces(int n) {
+    int i;
+
+    for (i = 0; i < n; i++) {
+        printf(" ");
+    }
+}
+
+int getDigits(int n) {
+    if (n < 10) {
+        return 1;
+    }
+
+    return 2;
+}

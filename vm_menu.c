@@ -58,5 +58,27 @@ void initMenu(MenuItem * menu)
  **/
 MenuFunction getMenuChoice(MenuItem * menu)
 {
-    return NULL;
+    Boolean correctInput = FALSE;
+    char buffer[CHOICE_SIZE];
+    strcpy( buffer, EMPTY_STRING );
+
+    while ( !correctInput ) {
+        correctInput = TRUE;
+
+        /* Get the input and store it in name */
+        fgets( buffer, CHOICE_SIZE, stdin );
+
+        /* If name doesn't have a newline character (and thus the input was bigger than 20) */
+        /* remove overflowed characters and ask for new input */
+        if ( !strchr( buffer, '\n' )) {
+            printf( "\nBuffer overflow! Please enter a valid choice: " );
+            readRestOfLine();
+
+            correctInput = FALSE;
+        }
+    }
+
+    int choice = (int) strtol(buffer, NULL, 10 );
+
+    return menu[choice-1].function;
 }
