@@ -1,5 +1,7 @@
 #include "vm_options.h"
 #include "vm_linkedlist.h"
+#include "utility.h"
+#include <string.h>
 
 /**
  * vm_options.c this is where you need to implement the system handling
@@ -14,6 +16,11 @@
  **/
 Boolean systemInit(VmSystem * system)
 {
+    List *list = malloc(sizeof(VmSystem));
+    list->head = NULL;
+    list->size = 0;
+    system->itemList = list;
+
     return FALSE;
 }
 
@@ -51,7 +58,8 @@ Boolean loadStock(VmSystem * system, const char * fileName)
     stockFile = fopen(fileName, "r");
 
     if (stockFile == NULL) {
-        // File not found
+        puts("Error: File not found!");
+
         return FALSE;
     }
 
@@ -73,7 +81,7 @@ Stock *createStockFromLine(char *line) {
     char seperator[2] = "|";
     char priceSeperator[2] = ".";
 
-    char *lineCopy = strdup(line);
+    char *lineCopy = copyString(line);
 
     char *id = strtok(lineCopy, seperator);
     char *name = strtok(NULL, seperator);
@@ -87,13 +95,12 @@ Stock *createStockFromLine(char *line) {
     unsigned int dollars = (unsigned int) strtol(dollarsString, NULL, 10);
     unsigned int cents = (unsigned int) strtol(centsString, NULL, 10);
 
+    unsigned int quantity = (unsigned int) strtol(quantityString, NULL, 10);
+    Stock *stock = malloc(sizeof(Stock));
+
     Price price;
     price.dollars = dollars;
     price.cents = cents;
-
-    unsigned int quantity = (unsigned int) strtol(quantityString, NULL, 10);
-
-    Stock *stock = malloc(sizeof(Stock));
 
     stock->onHand = quantity;
     stock->price = price;

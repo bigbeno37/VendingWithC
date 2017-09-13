@@ -12,39 +12,31 @@
  **/
 void initMenu(MenuItem * menu)
 {
-    MenuItem displayAll;
+    MenuItem displayAll, purchaseItems, exit, add, remove, coins, resetStockValues, resetCoinStock, abort;
     strcpy(displayAll.text, "Display Items");
     displayAll.function = displayItems;
 
-    MenuItem purchaseItems;
     strcpy(purchaseItems.text, "Purchase Items");
     purchaseItems.function = purchaseItem;
 
-    MenuItem exit;
     strcpy(exit.text, "Save amd Exit");
     exit.function = saveAndExit;
 
-    MenuItem add;
     strcpy(add.text, "Add Item");
     add.function = addItem;
 
-    MenuItem remove;
     strcpy(remove.text, "Remove Item");
     remove.function = removeItem;
 
-    MenuItem coins;
     strcpy(coins.text, "Display Coins");
     coins.function = displayCoins;
 
-    MenuItem resetStockValues;
     strcpy(resetStockValues.text, "Reset Stock");
     resetStockValues.function = resetStock;
 
-    MenuItem resetCoinStock;
     strcpy(resetCoinStock.text, "Reset Coins");
     resetCoinStock.function = resetCoins;
 
-    MenuItem abort;
     strcpy(abort.text, "Abort Program");
     abort.function = abortProgram;
 

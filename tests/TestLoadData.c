@@ -1,6 +1,6 @@
-//
-// Created by bigbeno37 on 13/09/17.
-//
+/*
+ * Created by bigbeno37 on 13/09/17.
+ */
 
 #include "TestLoadData.h"
 #include "../vm_options.h"
@@ -27,15 +27,16 @@ void loadStockCorrectlyLoadsStock() {
     char *line = "I0002|Apple Pie|Delicious Stewed Apple in a Yummy Pastry envelope|3.0|20\n";
     char *secondLine = "I0003|Apple Pie|Delicious Stewed Apple in a Yummy Pastry envelope|3.0|20\n";
 
+    VmSystem *system = malloc(sizeof(VmSystem));
+
     List *list = malloc(sizeof(List));
     list->head = NULL;
     list->size =  0;
 
-    VmSystem *system = malloc(sizeof(VmSystem));
     system->itemList = list;
 
-    fprintf(file, line);
-    fprintf(file, secondLine);
+    fputs(line, file);
+    fputs(secondLine, file);
     fclose(file);
 
     iAssertThat("Before loading stock from file, the list size is 0", 0, list->size);

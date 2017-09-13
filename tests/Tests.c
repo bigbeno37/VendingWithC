@@ -1,11 +1,12 @@
-//
-// Created by bigbeno37 on 12/09/17.
-//
+/*
+ * Created by bigbeno37 on 12/09/17.
+ */
 
 #include <stdio.h>
 #include "../vm.h"
 #include "TestLinkedList.h"
 #include "TestLoadData.h"
+#include "TestUtils.h"
 
 Boolean allTestsPassed = TRUE;
 
@@ -45,6 +46,8 @@ void sAssertThat(char *assertion, char *expected, char *actual) {
 }
 
 void run_tests() {
+    copyStringCorrectlyCopiesString();
+
     getSizeWillCorrectlyReturnSize();
     getNodeWillCorrectlyReturnNode();
     loadStockCorrectlyLoadsStock();

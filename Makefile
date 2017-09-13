@@ -1,11 +1,13 @@
-SOURCES=vm.c vm_menu.c vm_options.c vm_stock.c vm_coin.c utility.c
-HEADERS=vm.h vm_menu.h vm_options.h vm_stock.h vm_coin.h utility.h vm_system.h
+SOURCES=utility.c vm.c vm_coin.c vm_linkedlist.c vm_menu.c vm_options.c vm_stock.c
+HEADERS=utility.h vm.h vm_coin.h vm_linkedlist.h vm_menu.h vm_options.h vm_stock.h vm_system.h
+TEST_SOURCES=tests/TestLinkedList.c tests/TestLoadData.c tests/Tests.c tests/TestUtils.c
+TEST_HEADERS=tests/TestLinkedList.h tests/TestLoadData.h tests/Tests.h tests/TestUtils.h
 PROGRAM=vm
 DEBUG=-g
 FLAGS=-ansi -pedantic -Wall $(DEBUG)
 
 all:
-	gcc $(FLAGS) -o $(PROGRAM) $(SOURCES)
+	gcc $(FLAGS) -o $(PROGRAM) $(SOURCES) $(TEST_SOURCES)
 
 clean:
 	rm $(PROGRAM)

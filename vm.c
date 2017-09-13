@@ -4,21 +4,27 @@
 int main(int argc, char ** argv)
 {
     Boolean debug = TRUE;
+    MenuItem menu[NUMBER_OF_MENU_ITEMS];
+    VmSystem *system = malloc(sizeof(VmSystem));
+    int i;
 
     if (debug) {
         run_tests();
     }
 
-    VmSystem *system = malloc(sizeof(VmSystem));
-    List *list = malloc(sizeof(VmSystem));
-    list->head = NULL;
-    list->size = 0;
-    system->itemList = list;
+    if (argv[1] == NULL) {
+        puts("Error! Stock file must be specified!");
 
-    MenuItem menu[NUMBER_OF_MENU_ITEMS];
+        exit(1);
+    } else if(!fileExists(argv[1])) {
+        puts("Error! Stock file not found!");
+        exit(1);
+    }
+
     initMenu(menu);
+    systemInit(system);
 
-    for (int i = 0; i < NUMBER_OF_MENU_ITEMS; i++) {
+    for (i = 0; i < NUMBER_OF_MENU_ITEMS; i++) {
 
         if (i == 0) {
             puts("Main Menu:");

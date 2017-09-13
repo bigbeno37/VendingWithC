@@ -1,6 +1,6 @@
-//
-// Created by bigbeno37 on 13/09/17.
-//
+/*
+ * Created by bigbeno37 on 13/09/17.
+ */
 
 #include "../vm_coin.h"
 #include "Tests.h"
@@ -8,8 +8,8 @@
 
 void getSizeWillCorrectlyReturnSize() {
     List list;
-    list.head = NULL;
     Stock stock;
+    list.head = NULL;
 
     iAssertThat("Before, list size is 0", 0, getListSize(&list));
 
@@ -25,9 +25,9 @@ void getSizeWillCorrectlyReturnSize() {
 
 void getNodeWillCorrectlyReturnNode() {
     List list;
+    Stock *stock = malloc(sizeof(Stock)), *newStock = malloc(sizeof(Stock));
     list.head = NULL;
 
-    Stock *stock = malloc(sizeof(Stock));
     strcpy(stock->id, "1");
 
     addNode(&list, stock);
@@ -36,7 +36,6 @@ void getNodeWillCorrectlyReturnNode() {
 
     addNode(&list, stock);
 
-    Stock *newStock = malloc(sizeof(Stock));
     strcpy(newStock->id, "2");
     addNode(&list, newStock);
 

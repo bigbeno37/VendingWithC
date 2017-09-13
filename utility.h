@@ -30,4 +30,8 @@ typedef enum boolean
  **/
 void readRestOfLine();
 
+char *copyString(char *string);
+Boolean fileExists(char *file);
+
+
 #endif

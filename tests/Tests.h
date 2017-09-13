@@ -1,11 +1,11 @@
-//
-// Created by bigbeno37 on 12/09/17.
-//
+/*
+ * Created by bigbeno37 on 12/09/17.
+ */
 
 #ifndef VENDINGWITHC_TESTS_H
 #define VENDINGWITHC_TESTS_H
 
-#endif //VENDINGWITHC_TESTS_H
+#endif
 
 void run_tests();
 void assertThat(char *assertion, void *expected, void *actual);

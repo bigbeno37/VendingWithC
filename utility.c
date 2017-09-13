@@ -15,3 +15,24 @@ void readRestOfLine()
     /* Reset the error status of the stream. */
     clearerr(stdin);
 }
+
+char *copyString(char *string) {
+    int i;
+    char *toBeCopied = malloc(strlen(string)+1);
+
+    for(i = 0; i < strlen(string)+1; i++) {
+        toBeCopied[i] = string[i];
+    }
+
+    return toBeCopied;
+}
+
+Boolean fileExists(char *path) {
+    FILE *file = fopen(path, "r");
+
+    if (file == NULL) {
+        return FALSE;
+    }
+
+    return TRUE;
+}
