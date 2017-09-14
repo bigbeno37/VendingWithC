@@ -254,8 +254,9 @@ void displayItems(VmSystem * system)
 void purchaseItem(VmSystem * system)
 {
     Stock *stock;
-    char *input, *purchaseInput;
+    char *input, *cashInput;
     int amountOwed;
+    Price cashLeft;
 
     puts("Purchase item");
     puts("-------------");
@@ -273,11 +274,11 @@ void purchaseItem(VmSystem * system)
                      "Press enter on a new and empty line to cancel this purchase:");
 
         amountOwed = getDecimalValue(stock->price);
-        Price cashLeft = getPriceFromValue(amountOwed);
+        cashLeft = getPriceFromValue(amountOwed);
 
         while (amountOwed > 0) {
             printf("You still need to give us $%d.%02d: ", cashLeft.dollars, cashLeft.cents);
-            char *cashInput = getUserInput(4);
+            cashInput = getUserInput(4);
 
             if (isValidDenomination(cashInput, system)) {
                 amountOwed -= toInt(cashInput);
@@ -290,6 +291,8 @@ void purchaseItem(VmSystem * system)
             }
         }
 
+        stock->onHand = stock->onHand - 1;
+
         printf("Thank you. Here is your %s", stock->name);
 
         if (amountOwed < 0) {
@@ -300,14 +303,6 @@ void purchaseItem(VmSystem * system)
 
         puts(".\nPlease come back soon.");
     }
-
-    // WHILE amount IS GREATER THAN 0
-    //     ASK USER TO ENTER cash
-    //         IF cash ISN'T A VALID DENOMINATION
-    //             continue;
-    //         ELSE
-    //             amount -= cash
-    //             continue;
 }
 
 /**
