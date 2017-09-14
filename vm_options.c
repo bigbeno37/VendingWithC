@@ -255,8 +255,8 @@ void purchaseItem(VmSystem * system)
 {
     Stock *stock;
     char *input, *cashInput;
-    int amountOwed;
-    Price cashLeft;
+    int amountOwed, originalAmount;
+    Price cashLeft, refund;
 
     puts("Purchase item");
     puts("-------------");
@@ -264,44 +264,74 @@ void purchaseItem(VmSystem * system)
 
     input = getUserInput(ID_LEN);
 
+    /* If the user inputs a newline, return to the menu */
+    if (strcmp(input, EMPTY_STRING) == 0) {
+        puts("Returning to main menu...");
+        return;
+    }
+
     /* If the specified stock exists... */
     stock = getStockWithID(input, system->itemList);
     if (stock) {
-        printf("You have selected \"%s\t%s\". This will cost you $%d.%02d.\n", stock->name,
-        stock->desc, stock->price.dollars, stock->price.cents);
+        if (stock->onHand > 0) {
+            printf("You have selected \"%s\t%s\". This will cost you $%d.%02d.\n", stock->name,
+                   stock->desc, stock->price.dollars, stock->price.cents);
 
-        puts("Please hand over the money – type in the value of each note/coin in cents.\n"
-                     "Press enter on a new and empty line to cancel this purchase:");
+            puts("Please hand over the money – type in the value of each note/coin in cents.\n"
+                         "Press enter on a new and empty line to cancel this purchase:");
 
-        amountOwed = getDecimalValue(stock->price);
-        cashLeft = getPriceFromValue(amountOwed);
+            originalAmount = getDecimalValue(stock->price);
+            amountOwed = getDecimalValue(stock->price);
+            cashLeft = getPriceFromValue(amountOwed);
 
-        while (amountOwed > 0) {
-            printf("You still need to give us $%d.%02d: ", cashLeft.dollars, cashLeft.cents);
-            cashInput = getUserInput(4);
+            while (amountOwed > 0) {
+                printf("You still need to give us $%d.%02d: ", cashLeft.dollars, cashLeft.cents);
+                cashInput = getUserInput(4);
 
-            if (isValidDenomination(cashInput, system)) {
-                amountOwed -= toInt(cashInput);
-                cashLeft = getPriceFromValue(amountOwed);
-            } else {
-                Price cashEntered = getPriceFromValue(toInt(cashInput));
+                /* If the user enters a newline, refund user and go back
+                 * to the menu */
+                if (strcmp(cashInput, EMPTY_STRING) == 0) {
+                    refund = getPriceFromValue(originalAmount-amountOwed);
 
-                printf("Error: $%d.%02d is not a valid denomination of money.\n",
-                       cashEntered.dollars, cashEntered.cents);
+                    if (originalAmount-amountOwed > 0) {
+                        refund = getPriceFromValue(originalAmount-amountOwed);
+
+                        printf("Order cancelled. Here is your $%d.%02d back.\n",
+                               refund.dollars, refund.cents);
+                    } else {
+                        puts("Order cancelled.");
+                    }
+
+                    return;
+                }
+
+                if (isValidDenomination(cashInput, system)) {
+                    amountOwed -= toInt(cashInput);
+                    cashLeft = getPriceFromValue(amountOwed);
+                } else {
+                    Price cashEntered = getPriceFromValue(toInt(cashInput));
+
+                    printf("Error: $%d.%02d is not a valid denomination of money.\n",
+                           cashEntered.dollars, cashEntered.cents);
+                }
             }
+
+            stock->onHand = stock->onHand - 1;
+
+            printf("Thank you. Here is your %s", stock->name);
+
+            if (amountOwed < 0) {
+                Price change = getPriceFromValue(-1*amountOwed);
+
+                printf(", and your change of $%d.%02d", change.dollars, change.cents);
+            }
+
+            puts(".\nPlease come back soon.");
+        } else {
+            puts("We're out of stock on that item sorry!");
         }
-
-        stock->onHand = stock->onHand - 1;
-
-        printf("Thank you. Here is your %s", stock->name);
-
-        if (amountOwed < 0) {
-            Price change = getPriceFromValue(-1*amountOwed);
-
-            printf(", and your change of $%d.%02d", change.dollars, change.cents);
-        }
-
-        puts(".\nPlease come back soon.");
+    } else {
+        puts("Stock doesn't exist!");
     }
 }
 

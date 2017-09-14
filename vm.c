@@ -39,6 +39,7 @@ int main(int argc, char ** argv)
         displayMenu(menu);
         printf("Select your option (1-9): ");
         getMenuChoice(menu)(system);
+        puts("Returning to main menu...");
     }
 
     return EXIT_SUCCESS;
