@@ -271,18 +271,43 @@ void purchaseItem(VmSystem * system)
 
         puts("Please hand over the money – type in the value of each note/coin in cents.\n"
                      "Press enter on a new and empty line to cancel this purchase:");
-        printf("You still need to give us $%d.%02d: ", stock->price.dollars, stock->price.cents);
 
         amountOwed = getDecimalValue(stock->price);
+        Price cashLeft = getPriceFromValue(amountOwed);
 
-        purchaseInput = getUserInput(4);
-        if (strcmp(purchaseInput, "/n") == 0) {
-            return;
-        } else if (isValidDenomination(purchaseInput, system)) {
-            amountOwed -= toInt(purchaseInput);
-            printf("%d", amountOwed);
+        while (amountOwed > 0) {
+            printf("You still need to give us $%d.%02d: ", cashLeft.dollars, cashLeft.cents);
+            char *cashInput = getUserInput(4);
+
+            if (isValidDenomination(cashInput, system)) {
+                amountOwed -= toInt(cashInput);
+                cashLeft = getPriceFromValue(amountOwed);
+            } else {
+                Price cashEntered = getPriceFromValue(toInt(cashInput));
+
+                printf("Error: $%d.%02d is not a valid denomination of money.\n",
+                       cashEntered.dollars, cashEntered.cents);
+            }
         }
+
+        printf("Thank you. Here is your %s", stock->name);
+
+        if (amountOwed < 0) {
+            Price change = getPriceFromValue(-1*amountOwed);
+
+            printf(", and your change of $%d.%02d", change.dollars, change.cents);
+        }
+
+        puts(".\nPlease come back soon.");
     }
+
+    // WHILE amount IS GREATER THAN 0
+    //     ASK USER TO ENTER cash
+    //         IF cash ISN'T A VALID DENOMINATION
+    //             continue;
+    //         ELSE
+    //             amount -= cash
+    //             continue;
 }
 
 /**

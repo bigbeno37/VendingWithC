@@ -91,7 +91,7 @@ void displayMenu(MenuItem *menu) {
     for (i = 0; i < NUMBER_OF_MENU_ITEMS; i++) {
 
         if (i == 0) {
-            puts("Main Menu:");
+            puts("\nMain Menu:");
         } else if (i == 3) {
             puts("Administrator-Only Menu:");
         }

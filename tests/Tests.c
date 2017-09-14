@@ -86,6 +86,7 @@ void run_tests() {
 
     isValidDenominationWillDetermineValidDenomination();
     getDecimalValueWillCorrectlyDetermineCorrectValue();
+    getPriceFromValueWillCorrectlyReturnPrice();
 
     if(!allTestsPassed) {
         puts("There were errors running tests!");

@@ -3,5 +3,6 @@
 
 void isValidDenominationWillDetermineValidDenomination();
 void getDecimalValueWillCorrectlyDetermineCorrectValue();
+void getPriceFromValueWillCorrectlyReturnPrice();
 
 #endif

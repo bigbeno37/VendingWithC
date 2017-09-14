@@ -33,3 +33,15 @@ Boolean isValidDenomination(char *value, VmSystem *system) {
 int getDecimalValue(Price price) {
     return 100*price.dollars + price.cents;
 }
+
+/*
+ * Returns a price instance created from the amountOfCents passed in
+ */
+Price getPriceFromValue(int amountOfCents) {
+    Price price;
+    /* Discard the last two digits */
+    price.dollars = (unsigned int) (amountOfCents / 100.0f);
+    price.cents = amountOfCents - price.dollars * 100;
+
+    return price;
+}

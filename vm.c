@@ -33,11 +33,10 @@ int main(int argc, char ** argv)
     systemInit(system);
     loadData(system, argv[1], "coins.dat");
 
-    displayMenu(menu);
-
     /* The main loop of the program, and is where the user
      * can call the various functions available */
     while (TRUE) {
+        displayMenu(menu);
         printf("Select your option (1-9): ");
         getMenuChoice(menu)(system);
     }

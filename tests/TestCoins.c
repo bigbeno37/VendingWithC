@@ -37,3 +37,18 @@ void getDecimalValueWillCorrectlyDetermineCorrectValue() {
     iAssertThat("$1.50 will equal 150", 150, getDecimalValue(price));
     iAssertThat("$0.50 will equal 50", 50, getDecimalValue(newPrice));
 }
+
+/*
+ * Determine if getPriceFromValue will return a correctly
+ * formatted Price instance
+ */
+void getPriceFromValueWillCorrectlyReturnPrice() {
+    int cash = 378;
+
+    iAssertThat("Given 378 cents, there will be 3 dollars", 3, getPriceFromValue(cash).dollars);
+    iAssertThat("Given 378 cents, there will be 78 cents", 78, getPriceFromValue(cash).cents);
+
+    cash = 78;
+    iAssertThat("Given 78 cents, there will be 0 dollars", 0, getPriceFromValue(cash).dollars);
+    iAssertThat("Given 78 cents, there will be 78 cents", 78, getPriceFromValue(cash).cents);
+}

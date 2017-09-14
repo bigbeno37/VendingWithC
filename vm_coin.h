@@ -12,5 +12,6 @@
 
 Boolean isValidDenomination(char *value, VmSystem *system);
 int getDecimalValue(Price price);
+Price getPriceFromValue(int amountOfCents);
 
 #endif
