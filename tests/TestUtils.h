@@ -3,5 +3,6 @@
 
 void copyStringCorrectlyCopiesString();
 void iToStringCorrectlyReturnsNumber();
+void getValueOfIDCorrectlyReturnsValue();
 
 #endif

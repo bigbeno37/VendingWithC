@@ -203,12 +203,6 @@ Boolean saveStock(VmSystem * system)
     /* Remove the stock file */
     remove(system->stockFileName);
 
-    if (!fileExists(system->stockFileName)) {
-        puts("Error! Stock file not found!");
-
-        return FALSE;
-    }
-
     /* Recreate stock file and open for read / write access */
     file = fopen(system->stockFileName, "w+");
 
@@ -409,7 +403,13 @@ void saveAndExit(VmSystem * system)
  * requirement 7 of of assignment specification.
  **/
 void addItem(VmSystem * system)
-{ }
+{
+    printf("This new meal item will have an ID of I%04d\n",
+           /* In the list, it is ordered from lowest ID to highest.
+            * As such, the highest node will have the highest ID,
+            * thus adding one to it will yield the ID that will be created*/
+           getValueOfID(getNthNode(system->itemList, system->itemList->size)->data->id)+1);
+}
 
 /**
  * Remove an item from the system, including free'ing its memory.

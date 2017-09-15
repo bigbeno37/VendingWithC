@@ -8,43 +8,46 @@
  */
 void getSizeWillCorrectlyReturnSize() {
     /* Create a new list and stock item */
-    List list;
-    Stock stock;
-    list.head = NULL;
+    List *list = malloc(sizeof(List));
+    Stock *stock = malloc(sizeof(Stock)), *secondStock = malloc(sizeof(Stock)),
+        *thirdStock = malloc(sizeof(Stock));
+    list->head = NULL;
+    strcpy(stock->id, "I0001");
+    strcpy(secondStock->id, "I0002");
+    strcpy(thirdStock->id, "I0003");
 
-    iAssertThat("Before adding a node, list size is 0", 0, getListSize(&list));
+    iAssertThat("Before adding a node, list size is 0", 0, getListSize(list));
 
-    addNode(&list, &stock);
+    addNode(list, stock);
 
-    iAssertThat("After adding a node, list size is 1", 1, getListSize(&list));
+    iAssertThat("After adding a node, list size is 1", 1, getListSize(list));
 
-    addNode(&list, &stock);
-    addNode(&list, &stock);
+    addNode(list, secondStock);
+    addNode(list, thirdStock);
 
-    iAssertThat("After adding 3 nodes, the size of the list should be 3", 3, getListSize(&list));
+    iAssertThat("After adding 3 nodes, the size of the list should be 3", 3, getListSize(list));
 }
 
 /*
  * Determine if getNthNode will return the correct node in the list
  */
 void getNodeWillCorrectlyReturnNode() {
-    List list;
-    Stock stock, newStock;
-    list.head = NULL;
+    List *list = malloc(sizeof(List));
+    Stock *stock = malloc(sizeof(Stock)), *newStock = malloc(sizeof(Stock));
+    list->head = NULL;
 
-    strcpy(stock.id, "1");
+    strcpy(stock->id, "I0001");
 
-    addNode(&list, &stock);
+    addNode(list, stock);
 
-    sAssertThat("After adding a node, I can retrieve the first node", "1", getNthNode(&list, 1)->data->id);
+    sAssertThat("After adding a node, I can retrieve the first node",
+                "I0001", getNthNode(list, 1)->data->id);
 
-    addNode(&list, &stock);
+    strcpy(newStock->id, "I0002");
+    addNode(list, newStock);
 
-    strcpy(newStock.id, "2");
-    addNode(&list, &newStock);
-
-    sAssertThat("After adding three nodes, I can retrieve the third node", "2", getNthNode(&list, 3)->data->id);
-    sAssertThat("After adding three nodes, I can retrieve the second node", "1", getNthNode(&list, 2)->data->id);
+    sAssertThat("After adding two nodes, I can retrieve the second node",
+                "I0002", getNthNode(list, 2)->data->id);
 }
 
 /*
@@ -53,21 +56,53 @@ void getNodeWillCorrectlyReturnNode() {
  */
 void nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists() {
     List *list = malloc(sizeof(List));
-    Stock stock;
-    Stock newStock;
+    Stock *stock = malloc(sizeof(Stock)), *newStock = malloc(sizeof(Stock));
     list->head = NULL;
 
-    strcpy(stock.id, "2");
-    strcpy(newStock.id, "1");
+    strcpy(stock->id, "I0001");
+    strcpy(newStock->id, "I0002");
 
-    assertNull("Before adding Stock with ID 2, it will not exist", getStockWithID("2", list));
+    assertNull("Before adding Stock with ID I0001, it will not exist",
+               getStockWithID("I0001", list));
 
-    addNode(list, &stock);
+    addNode(list, stock);
 
-    assertNull("Stock with ID 1 will be NULL", getStockWithID("1", list));
-    assertNotNull("Stock with ID 2 will exist", getStockWithID("2", list));
+    assertNull("Stock with ID I0002 will be NULL", getStockWithID("I0002", list));
+    assertNotNull("Stock with ID I0001 will exist", getStockWithID("I0001", list));
 
-    addNode(list, &newStock);
+    addNode(list, newStock);
 
-    assertNotNull("After adding stock with ID 1, it will now exist", getStockWithID("1", list));
+    assertNotNull("After adding stock with ID I0002, it will now exist",
+                  getStockWithID("I0002", list));
+}
+
+/*
+ * Determine if addNode will correctly position the node passed in
+ * based on ID entered
+ */
+void addNodeWillCorrectlyPositionAddedNode() {
+    List *list = malloc(sizeof(List));
+    Stock *firstStock = malloc(sizeof(Stock)), *fifthStock = malloc(sizeof(Stock)),
+    *secondStock = malloc(sizeof(Stock));
+
+    list->head = NULL;
+    list->size = 0;
+
+    strcpy(firstStock->id, "I0001");
+
+    addNode(list, firstStock);
+    assertNotNull("After adding the first stock, it will exist", getNthNode(list, 1));
+
+    strcpy(fifthStock->id, "I0005");
+    addNode(list, fifthStock);
+    assertNotNull("After adding the fifth stock, it will exist", getNthNode(list, 2));
+    sAssertThat("After adding the fifth stock, the second node will have ID I0005",
+        "I0005", getNthNode(list, 2)->data->id);
+
+    strcpy(secondStock->id, "I0002");
+    addNode(list, secondStock);
+    sAssertThat("After adding the second stock, the second node will have ID I0002",
+        "I0002", getNthNode(list, 2)->data->id);
+    sAssertThat("After adding the second stock, the third node will have ID I0005",
+        "I0005", getNthNode(list, 3)->data->id);
 }

@@ -35,17 +35,55 @@ unsigned int getListSize(List *list) {
  */
 void addNode(List *list, Stock *data) {
     /* Create the Node that will be added */
-    Node *pointer = malloc(sizeof(Node));
-    pointer->data = data;
+    Node *newNode = malloc(sizeof(Node));
+    Stock *currentStock;
+    Node *currentNode = list->head, *previousNode = NULL;
+    newNode->next = NULL;
+    newNode->data = data;
 
-    /* Set the current node's 'next' variable to the linked
-     * list's head node. If it does not exist, this node will
-     * become the head of the linked list, and its 'next' variable
-     * will remain NULL*/
-    pointer->next = list->head;
+    /* If the list doesn't contain a node, add one */
+    if (list->head == NULL) {
+        newNode->next = NULL;
 
-    /* Replace the head of the node with the current node */
-    list->head = pointer;
+        list->head = newNode;
+        list->size = 1;
+
+        return;
+    }
+
+    /* The list is not empty, so continue */
+    /* While the node has not been placed */
+    while(TRUE) {
+        currentStock = currentNode->data;
+
+        if (getValueOfID(currentStock->id) > getValueOfID(data->id)) {
+            /* If previousNode is not NULL */
+            if (previousNode) {
+                previousNode->next = newNode;
+            } else {
+                /* There is no previous node, so set the list head to the new node */
+                list->head = newNode;
+            }
+
+            newNode->next = currentNode;
+
+            break;
+        /* If this is the final node and the value is less than the
+         * current ID, then set the new node to the end of the list */
+        } else if (currentNode->next == NULL) {
+            currentNode->next = newNode;
+
+            break;
+        }
+
+        currentNode = currentNode->next;
+
+        if (previousNode == NULL) {
+            previousNode = list->head;
+        } else {
+            previousNode = previousNode->next;
+        }
+    }
 
     /* Update the size of the list with the new size */
     list->size = getListSize(list);
@@ -63,13 +101,13 @@ void addNode(List *list, Stock *data) {
  * getNthNode(1) will return I0001
  */
 Node *getNthNode(List *list, int n) {
-    int counter = list->size;
+    int counter = 1;
     Node *node = list->head;
 
-    while (counter > n) {
+    while (counter < n) {
         node = node->next;
 
-        counter--;
+        counter++;
     }
 
     return node;

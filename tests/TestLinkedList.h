@@ -4,5 +4,6 @@
 void getSizeWillCorrectlyReturnSize();
 void getNodeWillCorrectlyReturnNode();
 void nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists();
+void addNodeWillCorrectlyPositionAddedNode();
 
 #endif

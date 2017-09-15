@@ -126,3 +126,13 @@ char *iToString(int num, int digits) {
 
     return copyString(str);
 }
+
+/*
+ * Converts an ID into an int representation of that ID
+ */
+int getValueOfID(char *id) {
+    char *newID = copyString(id);
+    newID[0] = '0';
+
+    return toInt(newID);
+}

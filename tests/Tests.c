@@ -83,6 +83,7 @@ void run_tests() {
     getSizeWillCorrectlyReturnSize();
     getNodeWillCorrectlyReturnNode();
     nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists();
+    addNodeWillCorrectlyPositionAddedNode();
 
     loadStockCorrectlyLoadsStock();
     createStockFromLineCorrectlyCreatesStock();
@@ -92,6 +93,7 @@ void run_tests() {
     isValidDenominationWillDetermineValidDenomination();
     getDecimalValueWillCorrectlyDetermineCorrectValue();
     getPriceFromValueWillCorrectlyReturnPrice();
+    getValueOfIDCorrectlyReturnsValue();
 
     if(!allTestsPassed) {
         puts("There were errors running tests!");

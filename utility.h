@@ -42,5 +42,6 @@ int getDigits(int n);
 char *getUserInput(int bufferSize);
 int toInt(char *string);
 char *iToString(int num, int digits);
+int getValueOfID(char *id);
 
 #endif
