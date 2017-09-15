@@ -462,7 +462,7 @@ void addItem(VmSystem * system)
 void removeItem(VmSystem * system)
 {
     char *id;
-    Node *previousNode = NULL, *currentNode = system->itemList->head;
+    Stock *toBeRemoved;
 
     printf("Enter the item id of the item to remove from the menu: ");
     id = getUserInput(ID_LEN);
@@ -471,43 +471,16 @@ void removeItem(VmSystem * system)
         return;
     }
 
-    if (getStockWithID(id, system->itemList) == NULL) {
+    toBeRemoved = getStockWithID(id, system->itemList);
+
+    if (toBeRemoved == NULL) {
         puts("Item doesn't exist!");
     }
 
-    while (TRUE) {
-        /* If the ID matches the current node's */
-        if (strcmp(currentNode->data->id, id) == 0) {
-            /* If we're at the HEAD, then set the next node to be the head */
-            if (previousNode == NULL) {
-                system->itemList->head = currentNode->next;
+    printf("\"%s - %s\t%s\" has been removed from the system.\n",
+           toBeRemoved->id, toBeRemoved->name, toBeRemoved->desc);
 
-
-            /* If we're at the end of the list, then set the previous
-             * node's next to be NULL*/
-            } else if (currentNode->next == NULL) {
-                previousNode->next = NULL;
-            /* Node is inbetween two other nodes */
-            } else {
-                previousNode->next = currentNode->next;
-            }
-
-            printf("\"%s - %s\t%s\" has been removed from the system.\n",
-                currentNode->data->id, currentNode->data->name, currentNode->data->desc);
-
-            free(currentNode);
-            system->itemList->size = getListSize(system->itemList);
-            break;
-        }
-
-        /* Node didn't contain same ID, so move to the next */
-        if (previousNode != NULL) {
-            previousNode = previousNode->next;
-        } else {
-            previousNode = system->itemList->head;
-        }
-        currentNode = currentNode->next;
-    }
+    removeNode(id, system->itemList);
 }
 
 /**

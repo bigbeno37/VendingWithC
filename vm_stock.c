@@ -132,3 +132,41 @@ Stock *getStockWithID(char *id, List *list) {
 
     return NULL;
 }
+
+/*
+ * Removes a node with specified ID if it exists
+ */
+void removeNode(char *id, List *list) {
+    Node *previousNode = NULL, *currentNode = list->head;
+
+    while (TRUE) {
+        /* If the ID matches the current node's */
+        if (strcmp(currentNode->data->id, id) == 0) {
+            /* If we're at the HEAD, then set the next node to be the head */
+            if (previousNode == NULL) {
+                list->head = currentNode->next;
+
+
+                /* If we're at the end of the list, then set the previous
+                 * node's next to be NULL*/
+            } else if (currentNode->next == NULL) {
+                previousNode->next = NULL;
+                /* Node is inbetween two other nodes */
+            } else {
+                previousNode->next = currentNode->next;
+            }
+
+            free(currentNode);
+            list->size = getListSize(list);
+            break;
+        }
+
+        /* Node didn't contain same ID, so move to the next */
+        if (previousNode != NULL) {
+            previousNode = previousNode->next;
+        } else {
+            previousNode = list->head;
+        }
+        currentNode = currentNode->next;
+    }
+}

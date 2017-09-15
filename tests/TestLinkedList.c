@@ -106,3 +106,31 @@ void addNodeWillCorrectlyPositionAddedNode() {
     sAssertThat("After adding the second stock, the third node will have ID I0005",
         "I0005", getNthNode(list, 3)->data->id);
 }
+
+/*
+ * Determine if removeNode will correctly remove nodes from the system
+ */
+void removeNodeWillCorrectlyRemoveNodeFromSystem() {
+    List *list = malloc(sizeof(List));
+    Stock *firstStock = malloc(sizeof(Stock)), *secondStock = malloc(sizeof(Stock)),
+        *thirdStock = malloc(sizeof(Stock));
+
+    strcpy(firstStock->id, "I0001");
+    strcpy(secondStock->id, "I0002");
+    strcpy(thirdStock->id, "I0003");
+
+    addNode(list, firstStock);
+    addNode(list, secondStock);
+    addNode(list, thirdStock);
+
+    sAssertThat("The first node will have ID I0001", "I0001", getNthNode(list, 1)->data->id);
+    removeNode("I0001", list);
+    sAssertThat("After removing the first node, the new first node will have ID I0002",
+        "I0002", getNthNode(list, 1)->data->id);
+
+    addNode(list, firstStock);
+    sAssertThat("The second node will have ID I0002", "I0002", getNthNode(list, 2)->data->id);
+    removeNode("I0002", list);
+    sAssertThat("After removing the second node, the new second node will have ID I0003",
+        "I0003", getNthNode(list, 2)->data->id);
+}
