@@ -11,10 +11,6 @@ int main(int argc, char ** argv)
      * file locations*/
     VmSystem *system = malloc(sizeof(VmSystem));
 
-    if (runTests) {
-        run_tests();
-    }
-
     /* If the user didn't supply any arguments, halt the program */
     if (argv[1] == NULL) {
         puts("Error! Stock file must be specified!");
@@ -28,6 +24,10 @@ int main(int argc, char ** argv)
     }
     /* If there was a path passed in as an argument and the file
      * exists, continue with execution */
+
+    if (runTests) {
+        run_tests();
+    }
 
     system->stockFileName = copyString(argv[1]);
 

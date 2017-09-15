@@ -122,7 +122,7 @@ char *iToString(int num, int digits) {
      * the null terminator */
     int chars = digits+1;
     char *str = malloc((size_t) chars);
-    sprintf(str, "%d", num);
+    sprintf(str, "%0*d", digits, num);
 
     return copyString(str);
 }

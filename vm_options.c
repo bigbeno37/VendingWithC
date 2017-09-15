@@ -129,10 +129,16 @@ char *createLineFromStock(Stock *stock) {
     strcat(formattedOutput, stock->desc);
     strcat(formattedOutput, "|");
     /* Amount of dollars must not exceed two digits */
-    strcat(formattedOutput, iToString(stock->price.dollars, 2));
+
+    if (stock->price.dollars < 10) {
+        strcat(formattedOutput, iToString(stock->price.dollars, 1));
+    } else {
+        strcat(formattedOutput, iToString(stock->price.dollars, 2));
+    }
+
     strcat(formattedOutput, ".");
     /* Amount of cents must not exceed two digits */
-    strcat(formattedOutput, iToString(stock->price.cents, 2));
+    strcat(formattedOutput, iToString(stock->price.cents, 1));
 
     /* Add an extra 0 onto the price if there are 0 cents */
     if (stock->price.cents == 0) {
@@ -404,11 +410,49 @@ void saveAndExit(VmSystem * system)
  **/
 void addItem(VmSystem * system)
 {
-    printf("This new meal item will have an ID of I%04d\n",
-           /* In the list, it is ordered from lowest ID to highest.
+    /* In the list, it is ordered from lowest ID to highest.
             * As such, the highest node will have the highest ID,
             * thus adding one to it will yield the ID that will be created*/
-           getValueOfID(getNthNode(system->itemList, system->itemList->size)->data->id)+1);
+    int newID = getValueOfID(getNthNode(system->itemList,
+                                        system->itemList->size)->data->id)+1;
+    Price amount;
+    char *name, *description, id[ID_LEN];
+    Stock *newStock = malloc(sizeof(Stock));
+
+    printf("This new meal item will have an ID of I%04d\n", newID);
+    printf("Enter the item name: ");
+    name = getUserInput(NAME_LEN);
+    if (strcmp(name, EMPTY_STRING) == 0) {
+        return;
+    }
+
+    printf("Enter the item description: ");
+    description = getUserInput(DESC_LEN);
+    if (strcmp(description, EMPTY_STRING) == 0) {
+        return;
+    }
+
+    printf("Enter the price for this item: ");
+    amount = getPriceFromValue(toInt(getUserInput(PRICE_LEN)) * 100);
+    if (getDecimalValue(amount) == 0) {
+        return;
+    }
+
+    strcat(id, "I");
+    /* The numerical value of the ID is only 4 digits, so subtract 1
+     * when passing it in */
+    strcat(id, iToString(newID, ID_LEN-1));
+
+    strcpy(newStock->id, id);
+    strcpy(newStock->name, name);
+    strcpy(newStock->desc, description);
+    newStock->price = amount;
+    newStock->onHand = DEFAULT_STOCK_LEVEL;
+
+    addNode(system->itemList, newStock);
+
+    printf("This item \"%s - %s\" has now been added to the menu.\n",
+        name, description);
 }
 
 /**
@@ -416,7 +460,55 @@ void addItem(VmSystem * system)
  * This function implements requirement 8 of the assignment specification.
  **/
 void removeItem(VmSystem * system)
-{ }
+{
+    char *id;
+    Node *previousNode = NULL, *currentNode = system->itemList->head;
+
+    printf("Enter the item id of the item to remove from the menu: ");
+    id = getUserInput(ID_LEN);
+
+    if (strcmp(id, EMPTY_STRING) == 0) {
+        return;
+    }
+
+    if (getStockWithID(id, system->itemList) == NULL) {
+        puts("Item doesn't exist!");
+    }
+
+    while (TRUE) {
+        /* If the ID matches the current node's */
+        if (strcmp(currentNode->data->id, id) == 0) {
+            /* If we're at the HEAD, then set the next node to be the head */
+            if (previousNode == NULL) {
+                system->itemList->head = currentNode->next;
+
+
+            /* If we're at the end of the list, then set the previous
+             * node's next to be NULL*/
+            } else if (currentNode->next == NULL) {
+                previousNode->next = NULL;
+            /* Node is inbetween two other nodes */
+            } else {
+                previousNode->next = currentNode->next;
+            }
+
+            printf("\"%s - %s\t%s\" has been removed from the system.\n",
+                currentNode->data->id, currentNode->data->name, currentNode->data->desc);
+
+            free(currentNode);
+            system->itemList->size = getListSize(system->itemList);
+            break;
+        }
+
+        /* Node didn't contain same ID, so move to the next */
+        if (previousNode != NULL) {
+            previousNode = previousNode->next;
+        } else {
+            previousNode = system->itemList->head;
+        }
+        currentNode = currentNode->next;
+    }
+}
 
 /**
  * This option will require you to display the coins from lowest to highest
