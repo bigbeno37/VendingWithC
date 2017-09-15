@@ -26,6 +26,11 @@ void getSizeWillCorrectlyReturnSize() {
     addNode(list, thirdStock);
 
     iAssertThat("After adding 3 nodes, the size of the list should be 3", 3, getListSize(list));
+
+    free(list);
+    free(stock);
+    free(secondStock);
+    free(thirdStock);
 }
 
 /*
@@ -48,6 +53,10 @@ void getNodeWillCorrectlyReturnNode() {
 
     sAssertThat("After adding two nodes, I can retrieve the second node",
                 "I0002", getNthNode(list, 2)->data->id);
+
+    free(list);
+    free(stock);
+    free(newStock);
 }
 
 /*
@@ -62,9 +71,6 @@ void nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists() {
     strcpy(stock->id, "I0001");
     strcpy(newStock->id, "I0002");
 
-    assertNull("Before adding Stock with ID I0001, it will not exist",
-               getStockWithID("I0001", list));
-
     addNode(list, stock);
 
     assertNull("Stock with ID I0002 will be NULL", getStockWithID("I0002", list));
@@ -74,6 +80,10 @@ void nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists() {
 
     assertNotNull("After adding stock with ID I0002, it will now exist",
                   getStockWithID("I0002", list));
+
+    free(list);
+    free(stock);
+    free(newStock);
 }
 
 /*
@@ -105,6 +115,11 @@ void addNodeWillCorrectlyPositionAddedNode() {
         "I0002", getNthNode(list, 2)->data->id);
     sAssertThat("After adding the second stock, the third node will have ID I0005",
         "I0005", getNthNode(list, 3)->data->id);
+
+    free(list);
+    free(firstStock);
+    free(fifthStock);
+    free(secondStock);
 }
 
 /*
@@ -133,4 +148,9 @@ void removeNodeWillCorrectlyRemoveNodeFromSystem() {
     removeNode("I0002", list);
     sAssertThat("After removing the second node, the new second node will have ID I0003",
         "I0003", getNthNode(list, 2)->data->id);
+
+    free(list);
+    free(firstStock);
+    free(secondStock);
+    free(thirdStock);
 }

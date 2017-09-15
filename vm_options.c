@@ -30,7 +30,13 @@ Boolean systemInit(VmSystem * system)
  * and run it through valgrind.
  **/
 void systemFree(VmSystem * system)
-{ }
+{
+    /* Free the linked list */
+    int i;
+    for (i = system->itemList->size; i > 0; i--) {
+        free(getNthNode(system->itemList, i));
+    }
+}
 
 /**
  * Loads the stock and coin data into the system. You will also need to assign
@@ -401,6 +407,8 @@ void saveAndExit(VmSystem * system)
     saveStock(system);
     saveCoins(system);
 
+    systemFree(system);
+
     exit(EXIT_SUCCESS);
 }
 
@@ -500,9 +508,9 @@ void displayCoins(VmSystem * system)
  **/
 void resetStock(VmSystem * system)
 {
-    int i = 1;
+    int i;
 
-    for (i; i <= system->itemList->size; i++) {
+    for (i = 1; i <= system->itemList->size; i++) {
         getNthNode(system->itemList, i)->data->onHand = DEFAULT_STOCK_LEVEL;
     }
 
@@ -524,4 +532,12 @@ void resetCoins(VmSystem * system)
  * This function implements requirement 10 of the assignment specification.
  **/
 void abortProgram(VmSystem * system)
-{ }
+{
+    puts("Goodbye!");
+
+    systemFree(system);
+
+    puts("Done!");
+
+    exit(EXIT_SUCCESS);
+}

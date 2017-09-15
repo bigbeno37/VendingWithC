@@ -19,6 +19,8 @@ void createStockFromLineCorrectlyCreatesStock() {
     iAssertThat("Created stock should have a valid price", 3, stock->price.dollars);
     iAssertThat("Created stock should have a valid price in cents", 0, stock->price.cents);
     iAssertThat("Created stock should have a valid amount of stock", 20, stock->onHand);
+
+    free(stock);
 }
 
 /*
@@ -56,6 +58,7 @@ void loadStockCorrectlyLoadsStock() {
     iAssertThat("After loading stock from file, the list size is 2", 2, list->size);
 
     remove(testFile);
+    free(list);
 }
 
 /*
@@ -82,6 +85,8 @@ void createLineFromStockCorrectlyFormatsLine() {
 
     sAssertThat("New stock will be converted into the appropriate string",
     "I0002|Apple Pie|Yummy dessert!|10.00|99", createLineFromStock(stock));
+
+    free(stock);
 }
 
 /*
@@ -129,4 +134,8 @@ void saveStockCorrectlyUpdatesStockFile() {
     sAssertThat("The second node will have ID I0002", "I0002", getNthNode(list, 2)->data->id);
 
     remove(filename);
+    free(system);
+    free(list);
+    free(stock);
+    free(newStock);
 }
