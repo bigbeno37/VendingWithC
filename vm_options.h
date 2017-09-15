@@ -23,6 +23,7 @@ void resetCoins(VmSystem * system);
 void abortProgram(VmSystem * system);
 
 Stock *createStockFromLine(char *line);
+char *createLineFromStock(Stock *stock);
 
 /*
  * The amount of extra characters in the displayed price

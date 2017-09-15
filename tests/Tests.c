@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "../vm.h"
 #include "TestLinkedList.h"
-#include "TestLoadData.h"
+#include "TestData.h"
 #include "TestUtils.h"
 #include "TestCoins.h"
 
@@ -17,6 +17,7 @@ Boolean allTestsPassed = TRUE;
 void iAssertThat(char *assertion, int expected, int actual) {
     if (expected != actual) {
         printf("There was an error in test: %s\n", assertion);
+        printf("Expected: %d\nActual: %d\n", expected, actual);
         allTestsPassed = FALSE;
     }
 }
@@ -27,6 +28,7 @@ void iAssertThat(char *assertion, int expected, int actual) {
 void sAssertThat(char *assertion, char *expected, char *actual) {
     if (strcmp(expected, actual) != 0) {
         printf("There was an error in test: %s\n", assertion);
+        printf("Expected: %s\nActual: %s\n", expected, actual);
         allTestsPassed = FALSE;
     }
 }
@@ -76,6 +78,7 @@ void assertFalse(char *assertion, Boolean actual) {
  */
 void run_tests() {
     copyStringCorrectlyCopiesString();
+    iToStringCorrectlyReturnsNumber();
 
     getSizeWillCorrectlyReturnSize();
     getNodeWillCorrectlyReturnNode();
@@ -83,6 +86,8 @@ void run_tests() {
 
     loadStockCorrectlyLoadsStock();
     createStockFromLineCorrectlyCreatesStock();
+    createLineFromStockCorrectlyFormatsLine();
+    saveStockCorrectlyUpdatesStockFile();
 
     isValidDenominationWillDetermineValidDenomination();
     getDecimalValueWillCorrectlyDetermineCorrectValue();

@@ -3,5 +3,7 @@
 
 void createStockFromLineCorrectlyCreatesStock();
 void loadStockCorrectlyLoadsStock();
+void createLineFromStockCorrectlyFormatsLine();
+void saveStockCorrectlyUpdatesStockFile();
 
 #endif

@@ -115,6 +115,37 @@ Stock *createStockFromLine(char *line) {
     return stock;
 }
 
+/*
+ * Takes in a stock instance and returns a formatted string containing
+ * the stock's information
+ */
+char *createLineFromStock(Stock *stock) {
+    char formattedOutput[MAX_STOCK_LINE_LEN] = "";
+
+    strcat(formattedOutput, stock->id);
+    strcat(formattedOutput, "|");
+    strcat(formattedOutput, stock->name);
+    strcat(formattedOutput, "|");
+    strcat(formattedOutput, stock->desc);
+    strcat(formattedOutput, "|");
+    /* Amount of dollars must not exceed two digits */
+    strcat(formattedOutput, iToString(stock->price.dollars, 2));
+    strcat(formattedOutput, ".");
+    /* Amount of cents must not exceed two digits */
+    strcat(formattedOutput, iToString(stock->price.cents, 2));
+
+    /* Add an extra 0 onto the price if there are 0 cents */
+    if (stock->price.cents == 0) {
+        strcat(formattedOutput, "0");
+    }
+
+    strcat(formattedOutput, "|");
+    /* Amount of stock items must not exceed two digits */
+    strcat(formattedOutput, iToString(stock->onHand, 2));
+
+    return copyString(formattedOutput);
+}
+
 /**
  * Loads the coin file data into the system.
  **/
@@ -166,7 +197,30 @@ Boolean loadCoins(VmSystem * system, const char * fileName)
  **/
 Boolean saveStock(VmSystem * system)
 {
-    return FALSE;
+    FILE *file;
+    int i;
+
+    /* Remove the stock file */
+    remove(system->stockFileName);
+
+    if (!fileExists(system->stockFileName)) {
+        puts("Error! Stock file not found!");
+
+        return FALSE;
+    }
+
+    /* Recreate stock file and open for read / write access */
+    file = fopen(system->stockFileName, "w+");
+
+    for (i = 1; i <= system->itemList->size; i++) {
+        Stock *currentStock = getNthNode(system->itemList, i)->data;
+
+        fprintf(file, "%s\n", createLineFromStock(currentStock));
+    }
+
+    fclose(file);
+
+    return TRUE;
 }
 
 /**
@@ -341,7 +395,14 @@ void purchaseItem(VmSystem * system)
  * This function implements requirement 6 of the assignment specification.
  **/
 void saveAndExit(VmSystem * system)
-{ }
+{
+    puts("\nGoodbye! Please come back soon!");
+
+    saveStock(system);
+    saveCoins(system);
+
+    exit(EXIT_SUCCESS);
+}
 
 /**
  * This option adds an item to the system. This function implements

@@ -35,12 +35,12 @@ typedef enum boolean
 void readRestOfLine();
 
 char *copyString(char *string);
-Boolean fileExists(char *file);
+Boolean fileExists(const char *file);
 void printNSpaces(int n);
 void printNDashes(int n);
 int getDigits(int n);
 char *getUserInput(int bufferSize);
 int toInt(char *string);
-
+char *iToString(int num, int digits);
 
 #endif

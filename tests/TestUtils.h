@@ -2,5 +2,6 @@
 #define VENDINGWITHC_TESTUTILS_H
 
 void copyStringCorrectlyCopiesString();
+void iToStringCorrectlyReturnsNumber();
 
 #endif

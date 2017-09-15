@@ -33,7 +33,7 @@ char *copyString(char *string) {
 /*
  * Determines if a file exists given a specific path
  */
-Boolean fileExists(char *path) {
+Boolean fileExists(const char *path) {
     FILE *file = fopen(path, "r");
 
     if (file == NULL) {
@@ -112,4 +112,17 @@ char *getUserInput(int bufferSize) {
  */
 int toInt(char *string) {
     return (int) strtol(string, NULL, 10);
+}
+
+/*
+ * Converts an int to string
+ */
+char *iToString(int num, int digits) {
+    /* String up to 'digits' characters plus an extra space for
+     * the null terminator */
+    int chars = digits+1;
+    char *str = malloc((size_t) chars);
+    sprintf(str, "%d", num);
+
+    return copyString(str);
 }

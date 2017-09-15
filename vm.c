@@ -29,6 +29,8 @@ int main(int argc, char ** argv)
     /* If there was a path passed in as an argument and the file
      * exists, continue with execution */
 
+    system->stockFileName = copyString(argv[1]);
+
     initMenu(menu);
     systemInit(system);
     loadData(system, argv[1], "coins.dat");
