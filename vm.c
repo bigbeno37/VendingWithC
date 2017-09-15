@@ -4,7 +4,7 @@
 int main(int argc, char ** argv)
 {
     /* Should unit tests be run? */
-    Boolean runTests = TRUE;
+    Boolean runTests = FALSE;
     /* The Menu array, holding currently available options */
     MenuItem menu[NUMBER_OF_MENU_ITEMS];
     /* The system holding the items linked list, coins, and
@@ -29,20 +29,23 @@ int main(int argc, char ** argv)
         run_tests();
     }
 
-    system->stockFileName = copyString(argv[1]);
+    system->stockFileName = argv[1];
 
     initMenu(menu);
     systemInit(system);
     loadData(system, argv[1], "coins.dat");
 
     /* The main loop of the program, and is where the user
-     * can call the various functions available */
+     * can call the various functions available *//*
     while (TRUE) {
         displayMenu(menu);
         printf("Select your option (1-9): ");
         getMenuChoice(menu)(system);
         puts("Returning to main menu...");
     }
+    */
+
+    systemFree(system);
 
     return EXIT_SUCCESS;
 }

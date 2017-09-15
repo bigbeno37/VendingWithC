@@ -36,6 +36,9 @@ void systemFree(VmSystem * system)
     for (i = system->itemList->size; i > 0; i--) {
         free(getNthNode(system->itemList, i));
     }
+
+    free(system->itemList);
+    free(system);
 }
 
 /**
@@ -73,10 +76,12 @@ Boolean loadStock(VmSystem * system, const char * fileName)
     /* While there is another line to read, continue reading lines
      * and generating Stock instances from them*/
     while (fgets(stockData, MAX_STOCK_LINE_LEN, stockFile) != NULL) {
-        Stock *stock = createStockFromLine(stockData);
+        Stock stock;
+
+        createStockFromLine(stockData, &stock);
 
         /* For each stock instance created, at it to the linked list */
-        addNode(system->itemList, stock);
+        addNode(system->itemList, &stock);
     }
 
     fclose(stockFile);
@@ -87,13 +92,11 @@ Boolean loadStock(VmSystem * system, const char * fileName)
 /*
  * Return a stock instance based on the line input
  */
-Stock *createStockFromLine(char *line) {
+void *createStockFromLine(char *line, Stock *newStock) {
     char separator[2] = "|";
     char priceSeparator[2] = ".";
 
-    char *lineCopy = copyString(line);
-
-    char *id = strtok(lineCopy, separator);
+    char *id = strtok(line, separator);
     char *name = strtok(NULL, separator);
     char *description = strtok(NULL, separator);
     char *priceString = strtok(NULL, separator);
@@ -106,56 +109,62 @@ Stock *createStockFromLine(char *line) {
     unsigned int cents = (unsigned int) toInt(centsString);
 
     unsigned int quantity = (unsigned int) toInt(quantityString);
-    Stock *stock = malloc(sizeof(Stock));
 
     Price price;
     price.dollars = dollars;
     price.cents = cents;
 
-    stock->onHand = quantity;
-    stock->price = price;
-    strcpy(stock->id, id);
-    strcpy(stock->name, name);
-    strcpy(stock->desc, description);
+    newStock->onHand = quantity;
+    newStock->price = price;
+    strcpy(newStock->id, id);
+    strcpy(newStock->name, name);
+    strcpy(newStock->desc, description);
 
-    return stock;
+    return newStock;
 }
 
 /*
  * Takes in a stock instance and returns a formatted string containing
  * the stock's information
  */
-char *createLineFromStock(Stock *stock) {
-    char formattedOutput[MAX_STOCK_LINE_LEN] = "";
+void createLineFromStock(Stock *stock, char *outputLine) {
+    char *buffer = malloc(MAX_STOCK_LINE_LEN);
 
-    strcat(formattedOutput, stock->id);
-    strcat(formattedOutput, "|");
-    strcat(formattedOutput, stock->name);
-    strcat(formattedOutput, "|");
-    strcat(formattedOutput, stock->desc);
-    strcat(formattedOutput, "|");
+    strcat(outputLine, stock->id);
+    strcat(outputLine, "|");
+    strcat(outputLine, stock->name);
+    strcat(outputLine, "|");
+    strcat(outputLine, stock->desc);
+    strcat(outputLine, "|");
     /* Amount of dollars must not exceed two digits */
 
     if (stock->price.dollars < 10) {
-        strcat(formattedOutput, iToString(stock->price.dollars, 1));
+        iToString(buffer, stock->price.dollars, 1);
     } else {
-        strcat(formattedOutput, iToString(stock->price.dollars, 2));
+        iToString(buffer, stock->price.dollars, 2);
     }
 
-    strcat(formattedOutput, ".");
+    strcat(outputLine, buffer);
+
+    strcat(outputLine, ".");
     /* Amount of cents must not exceed two digits */
-    strcat(formattedOutput, iToString(stock->price.cents, 1));
+    strcpy(buffer, "");
+    iToString(buffer, stock->price.cents, 1);
+    strcat(outputLine, buffer);
 
     /* Add an extra 0 onto the price if there are 0 cents */
     if (stock->price.cents == 0) {
-        strcat(formattedOutput, "0");
+        strcat(outputLine, "0");
     }
 
-    strcat(formattedOutput, "|");
+    strcat(outputLine, "|");
     /* Amount of stock items must not exceed two digits */
-    strcat(formattedOutput, iToString(stock->onHand, 2));
 
-    return copyString(formattedOutput);
+    strcpy(buffer, "");
+    iToString(buffer, stock->onHand, 2);
+    strcat(outputLine, buffer);
+
+    free(buffer);
 }
 
 /**
@@ -221,7 +230,10 @@ Boolean saveStock(VmSystem * system)
     for (i = 1; i <= system->itemList->size; i++) {
         Stock *currentStock = getNthNode(system->itemList, i)->data;
 
-        fprintf(file, "%s\n", createLineFromStock(currentStock));
+        char *outputLine = malloc(MAX_STOCK_LINE_LEN);
+        createLineFromStock(currentStock, outputLine);
+
+        fprintf(file, "%s\n", outputLine);
     }
 
     fclose(file);
@@ -314,7 +326,7 @@ void displayItems(VmSystem * system)
 void purchaseItem(VmSystem * system)
 {
     Stock *stock;
-    char *input, *cashInput;
+    char *input = malloc(ITEM_LEN), *cashInput = malloc(PRICE_LEN);
     int amountOwed, originalAmount;
     Price cashLeft, refund;
 
@@ -322,7 +334,7 @@ void purchaseItem(VmSystem * system)
     puts("-------------");
     printf("Please enter the id of the item you wish to purchase: ");
 
-    input = getUserInput(ID_LEN);
+    getUserInput(input, ITEM_LEN);
 
     /* If the user inputs a newline, return to the menu */
     if (strcmp(input, EMPTY_STRING) == 0) {
@@ -346,7 +358,7 @@ void purchaseItem(VmSystem * system)
 
             while (amountOwed > 0) {
                 printf("You still need to give us $%d.%02d: ", cashLeft.dollars, cashLeft.cents);
-                cashInput = getUserInput(4);
+                getUserInput(cashInput, PRICE_LEN);
 
                 /* If the user enters a newline, refund user and go back
                  * to the menu */
@@ -424,24 +436,26 @@ void addItem(VmSystem * system)
     int newID = getValueOfID(getNthNode(system->itemList,
                                         system->itemList->size)->data->id)+1;
     Price amount;
-    char *name, *description, id[ID_LEN];
+    char *name = malloc(NAME_LEN), *description = malloc(DESC_LEN), *id = malloc(ID_LEN), *price = malloc(PRICE_LEN),
+        *buffer = malloc(ID_LEN);
     Stock *newStock = malloc(sizeof(Stock));
 
     printf("This new meal item will have an ID of I%04d\n", newID);
     printf("Enter the item name: ");
-    name = getUserInput(NAME_LEN);
+    getUserInput(name, NAME_LEN);
     if (strcmp(name, EMPTY_STRING) == 0) {
         return;
     }
 
     printf("Enter the item description: ");
-    description = getUserInput(DESC_LEN);
+    getUserInput(description, DESC_LEN);
     if (strcmp(description, EMPTY_STRING) == 0) {
         return;
     }
 
     printf("Enter the price for this item: ");
-    amount = getPriceFromValue(toInt(getUserInput(PRICE_LEN)) * 100);
+    getUserInput(price, PRICE_LEN);
+    amount = getPriceFromValue(toInt(price) * 100);
     if (getDecimalValue(amount) == 0) {
         return;
     }
@@ -449,7 +463,8 @@ void addItem(VmSystem * system)
     strcat(id, "I");
     /* The numerical value of the ID is only 4 digits, so subtract 1
      * when passing it in */
-    strcat(id, iToString(newID, ID_LEN-1));
+    iToString(buffer, newID, ID_LEN - 1);
+    strcat(id, buffer);
 
     strcpy(newStock->id, id);
     strcpy(newStock->name, name);
@@ -461,6 +476,12 @@ void addItem(VmSystem * system)
 
     printf("This item \"%s - %s\" has now been added to the menu.\n",
         name, description);
+
+    free(name);
+    free(description);
+    free(id);
+    free(price);
+    free(buffer);
 }
 
 /**
@@ -469,11 +490,11 @@ void addItem(VmSystem * system)
  **/
 void removeItem(VmSystem * system)
 {
-    char *id;
+    char *id = malloc(ID_LEN);
     Stock *toBeRemoved;
 
     printf("Enter the item id of the item to remove from the menu: ");
-    id = getUserInput(ID_LEN);
+    getUserInput(id, ID_LEN);
 
     if (strcmp(id, EMPTY_STRING) == 0) {
         return;
@@ -483,6 +504,8 @@ void removeItem(VmSystem * system)
 
     if (toBeRemoved == NULL) {
         puts("Item doesn't exist!");
+
+        return;
     }
 
     printf("\"%s - %s\t%s\" has been removed from the system.\n",

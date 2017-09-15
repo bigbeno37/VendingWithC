@@ -10,17 +10,16 @@
 void createStockFromLineCorrectlyCreatesStock() {
     char *line = "I0002|Apple Pie|Delicious Stewed Apple in a Yummy Pastry envelope|3.0|20";
 
-    Stock *stock = createStockFromLine(line);
+    Stock stock;
+    createStockFromLine(line, &stock);
 
-    sAssertThat("Created stock should have a valid ID", "I0002", stock->id);
-    sAssertThat("Created stock should have a valid name", "Apple Pie", stock->name);
+    sAssertThat("Created stock should have a valid ID", "I0002", stock.id);
+    sAssertThat("Created stock should have a valid name", "Apple Pie", stock.name);
     sAssertThat("Created stock should have a valid description",
-                "Delicious Stewed Apple in a Yummy Pastry envelope", stock->desc);
-    iAssertThat("Created stock should have a valid price", 3, stock->price.dollars);
-    iAssertThat("Created stock should have a valid price in cents", 0, stock->price.cents);
-    iAssertThat("Created stock should have a valid amount of stock", 20, stock->onHand);
-
-    free(stock);
+                "Delicious Stewed Apple in a Yummy Pastry envelope", stock.desc);
+    iAssertThat("Created stock should have a valid price", 3, stock.price.dollars);
+    iAssertThat("Created stock should have a valid price in cents", 0, stock.price.cents);
+    iAssertThat("Created stock should have a valid amount of stock", 20, stock.onHand);
 }
 
 /*
@@ -67,6 +66,7 @@ void loadStockCorrectlyLoadsStock() {
  */
 void createLineFromStockCorrectlyFormatsLine() {
     Stock *stock = malloc(sizeof(Stock));
+    char *buffer = malloc(MAX_STOCK_LINE_LEN);
 
     stock->price = getPriceFromValue(375);
     stock->onHand = 20;
@@ -74,8 +74,10 @@ void createLineFromStockCorrectlyFormatsLine() {
     strcpy(stock->id, "I0001");
     strcpy(stock->desc, "Aussie classic");
 
+    createLineFromStock(stock, buffer);
+
     sAssertThat("Stock will be converted into the appropriate string",
-    "I0001|Meat Pie|Aussie classic|3.75|20", createLineFromStock(stock));
+    "I0001|Meat Pie|Aussie classic|3.75|20", buffer);
 
     stock->price = getPriceFromValue(1000);
     stock->onHand = 99;
@@ -83,10 +85,14 @@ void createLineFromStockCorrectlyFormatsLine() {
     strcpy(stock->id, "I0002");
     strcpy(stock->desc, "Yummy dessert!");
 
+    strcpy(buffer, "");
+    createLineFromStock(stock, buffer);
+
     sAssertThat("New stock will be converted into the appropriate string",
-    "I0002|Apple Pie|Yummy dessert!|10.00|99", createLineFromStock(stock));
+    "I0002|Apple Pie|Yummy dessert!|10.00|99", buffer);
 
     free(stock);
+    free(buffer);
 }
 
 /*
@@ -102,7 +108,7 @@ void saveStockCorrectlyUpdatesStockFile() {
     list->size = 0;
 
     system->itemList = list;
-    system->stockFileName = copyString(filename);
+    strcpy((char *) system->stockFileName, filename);
 
     stock->price = getPriceFromValue(375);
     stock->onHand = 20;

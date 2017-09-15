@@ -77,7 +77,6 @@ void assertFalse(char *assertion, Boolean actual) {
  * The main location where all tests are run
  */
 void run_tests() {
-    copyStringCorrectlyCopiesString();
     iToStringCorrectlyReturnsNumber();
 
     getSizeWillCorrectlyReturnSize();

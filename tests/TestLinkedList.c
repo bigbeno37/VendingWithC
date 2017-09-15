@@ -129,6 +129,7 @@ void removeNodeWillCorrectlyRemoveNodeFromSystem() {
     List *list = malloc(sizeof(List));
     Stock *firstStock = malloc(sizeof(Stock)), *secondStock = malloc(sizeof(Stock)),
         *thirdStock = malloc(sizeof(Stock));
+    list->head = NULL;
 
     strcpy(firstStock->id, "I0001");
     strcpy(secondStock->id, "I0002");

@@ -1,4 +1,5 @@
 #include "utility.h"
+#include "vm_system.h"
 
 /**
  * Function required to be used when clearing the buffer. It simply reads
@@ -17,20 +18,6 @@ void readRestOfLine()
 }
 
 /*
- * Returns the string passed in without reference to a pointer
- */
-char *copyString(char *string) {
-    int i;
-    char *toBeCopied = malloc(strlen(string)+1);
-
-    for(i = 0; i < strlen(string)+1; i++) {
-        toBeCopied[i] = string[i];
-    }
-
-    return toBeCopied;
-}
-
-/*
  * Determines if a file exists given a specific path
  */
 Boolean fileExists(const char *path) {
@@ -39,6 +26,8 @@ Boolean fileExists(const char *path) {
     if (file == NULL) {
         return FALSE;
     }
+
+    fclose(file);
 
     return TRUE;
 }
@@ -82,13 +71,8 @@ int getDigits(int n) {
 /*
  * Return the user input to 'bufferSize' characters
  */
-char *getUserInput(int bufferSize) {
-    Boolean correctInput = FALSE;
-    char *buffer = malloc((size_t) bufferSize+EXTRA_SPACES);
-
-    while ( !correctInput ) {
-        correctInput = TRUE;
-
+void getUserInput(char *buffer, int bufferSize) {
+    while ( TRUE ) {
         /* Get the input and store it in name */
         fgets( buffer, bufferSize+EXTRA_SPACES, stdin );
 
@@ -97,14 +81,12 @@ char *getUserInput(int bufferSize) {
         if ( !strchr( buffer, '\n' )) {
             printf( "\nBuffer overflow! Please enter a valid choice: " );
             readRestOfLine();
-
-            correctInput = FALSE;
         }
+
+        break;
     }
 
     buffer[strlen(buffer)-1] = '\0';
-
-    return copyString(buffer);
 }
 
 /*
@@ -117,21 +99,17 @@ int toInt(char *string) {
 /*
  * Converts an int to string
  */
-char *iToString(int num, int digits) {
-    /* String up to 'digits' characters plus an extra space for
-     * the null terminator */
-    int chars = digits+1;
-    char *str = malloc((size_t) chars);
-    sprintf(str, "%0*d", digits, num);
-
-    return copyString(str);
+void iToString(char *buffer, int num, int digits) {
+    sprintf(buffer, "%0*d", digits, num);
 }
 
 /*
  * Converts an ID into an int representation of that ID
  */
 int getValueOfID(char *id) {
-    char *newID = copyString(id);
+    char newID[ID_LEN];
+    strcpy(newID, id);
+
     newID[0] = '0';
 
     return toInt(newID);
