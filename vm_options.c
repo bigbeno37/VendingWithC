@@ -499,7 +499,15 @@ void displayCoins(VmSystem * system)
  * This function implements requirement 9 of the assignment specification.
  **/
 void resetStock(VmSystem * system)
-{ }
+{
+    int i = 1;
+
+    for (i; i <= system->itemList->size; i++) {
+        getNthNode(system->itemList, i)->data->onHand = DEFAULT_STOCK_LEVEL;
+    }
+
+    printf("All stock has been reset to the default level of %d\n", DEFAULT_STOCK_LEVEL);
+}
 
 /**
  * This option will require you to iterate over every coin in the coin
