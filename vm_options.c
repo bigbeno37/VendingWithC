@@ -34,11 +34,11 @@ void systemFree(VmSystem * system)
     /* Free the linked list */
     int i;
     for (i = system->itemList->size; i > 0; i--) {
+        free(getNthNode(system->itemList, i)->data);
         free(getNthNode(system->itemList, i));
     }
 
     free(system->itemList);
-    free(system);
 }
 
 /**
@@ -64,7 +64,7 @@ Boolean loadStock(VmSystem * system, const char * fileName)
     FILE *stockFile;
     char stockData[MAX_STOCK_LINE_LEN];
 
-    if (!fileExists((char *) fileName)) {
+    if (!fileExists(fileName)) {
         puts("Error: File not found!");
 
         return FALSE;
@@ -76,12 +76,12 @@ Boolean loadStock(VmSystem * system, const char * fileName)
     /* While there is another line to read, continue reading lines
      * and generating Stock instances from them*/
     while (fgets(stockData, MAX_STOCK_LINE_LEN, stockFile) != NULL) {
-        Stock stock;
+        Stock *stock = malloc(sizeof(Stock));
 
-        createStockFromLine(stockData, &stock);
+        createStockFromLine(stockData, stock);
 
         /* For each stock instance created, at it to the linked list */
-        addNode(system->itemList, &stock);
+        addNode(system->itemList, stock);
     }
 
     fclose(stockFile);
@@ -92,7 +92,7 @@ Boolean loadStock(VmSystem * system, const char * fileName)
 /*
  * Return a stock instance based on the line input
  */
-void *createStockFromLine(char *line, Stock *newStock) {
+void createStockFromLine(char *line, Stock *newStock) {
     char separator[2] = "|";
     char priceSeparator[2] = ".";
 
@@ -119,8 +119,6 @@ void *createStockFromLine(char *line, Stock *newStock) {
     strcpy(newStock->id, id);
     strcpy(newStock->name, name);
     strcpy(newStock->desc, description);
-
-    return newStock;
 }
 
 /*
@@ -128,7 +126,8 @@ void *createStockFromLine(char *line, Stock *newStock) {
  * the stock's information
  */
 void createLineFromStock(Stock *stock, char *outputLine) {
-    char *buffer = malloc(MAX_STOCK_LINE_LEN);
+
+    char cents[PRICE_LEN], dollars[PRICE_LEN], quantity[3];
 
     strcat(outputLine, stock->id);
     strcat(outputLine, "|");
@@ -139,18 +138,17 @@ void createLineFromStock(Stock *stock, char *outputLine) {
     /* Amount of dollars must not exceed two digits */
 
     if (stock->price.dollars < 10) {
-        iToString(buffer, stock->price.dollars, 1);
+        iToString(dollars, stock->price.dollars, 1);
     } else {
-        iToString(buffer, stock->price.dollars, 2);
+        iToString(dollars, stock->price.dollars, 2);
     }
 
-    strcat(outputLine, buffer);
+    strcat(outputLine, dollars);
 
     strcat(outputLine, ".");
     /* Amount of cents must not exceed two digits */
-    strcpy(buffer, "");
-    iToString(buffer, stock->price.cents, 1);
-    strcat(outputLine, buffer);
+    iToString(cents, stock->price.cents, 1);
+    strcat(outputLine, cents);
 
     /* Add an extra 0 onto the price if there are 0 cents */
     if (stock->price.cents == 0) {
@@ -160,11 +158,8 @@ void createLineFromStock(Stock *stock, char *outputLine) {
     strcat(outputLine, "|");
     /* Amount of stock items must not exceed two digits */
 
-    strcpy(buffer, "");
-    iToString(buffer, stock->onHand, 2);
-    strcat(outputLine, buffer);
-
-    free(buffer);
+    iToString(quantity, stock->onHand, 2);
+    strcat(outputLine, quantity);
 }
 
 /**
@@ -230,7 +225,7 @@ Boolean saveStock(VmSystem * system)
     for (i = 1; i <= system->itemList->size; i++) {
         Stock *currentStock = getNthNode(system->itemList, i)->data;
 
-        char *outputLine = malloc(MAX_STOCK_LINE_LEN);
+        char outputLine[MAX_STOCK_LINE_LEN] = "";
         createLineFromStock(currentStock, outputLine);
 
         fprintf(file, "%s\n", outputLine);
@@ -326,7 +321,7 @@ void displayItems(VmSystem * system)
 void purchaseItem(VmSystem * system)
 {
     Stock *stock;
-    char *input = malloc(ITEM_LEN), *cashInput = malloc(PRICE_LEN);
+    char input[ID_LEN] = "", cashInput[PRICE_LEN] = "";
     int amountOwed, originalAmount;
     Price cashLeft, refund;
 
@@ -334,7 +329,7 @@ void purchaseItem(VmSystem * system)
     puts("-------------");
     printf("Please enter the id of the item you wish to purchase: ");
 
-    getUserInput(input, ITEM_LEN);
+    getUserInput(input, ID_LEN);
 
     /* If the user inputs a newline, return to the menu */
     if (strcmp(input, EMPTY_STRING) == 0) {
@@ -559,8 +554,6 @@ void abortProgram(VmSystem * system)
     puts("Goodbye!");
 
     systemFree(system);
-
-    puts("Done!");
 
     exit(EXIT_SUCCESS);
 }

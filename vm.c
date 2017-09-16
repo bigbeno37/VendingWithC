@@ -4,12 +4,12 @@
 int main(int argc, char ** argv)
 {
     /* Should unit tests be run? */
-    Boolean runTests = FALSE;
+    Boolean runTests = TRUE;
     /* The Menu array, holding currently available options */
     MenuItem menu[NUMBER_OF_MENU_ITEMS];
     /* The system holding the items linked list, coins, and
      * file locations*/
-    VmSystem *system = malloc(sizeof(VmSystem));
+    VmSystem system;
 
     /* If the user didn't supply any arguments, halt the program */
     if (argv[1] == NULL) {
@@ -29,23 +29,22 @@ int main(int argc, char ** argv)
         run_tests();
     }
 
-    system->stockFileName = argv[1];
+    system.stockFileName = argv[1];
 
     initMenu(menu);
-    systemInit(system);
-    loadData(system, argv[1], "coins.dat");
+    systemInit(&system);
+    loadData(&system, system.stockFileName, "coins.dat");
 
     /* The main loop of the program, and is where the user
-     * can call the various functions available *//*
+     * can call the various functions available */
     while (TRUE) {
         displayMenu(menu);
         printf("Select your option (1-9): ");
-        getMenuChoice(menu)(system);
+        getMenuChoice(menu)(&system);
         puts("Returning to main menu...");
     }
-    */
 
-    systemFree(system);
+    systemFree(&system);
 
     return EXIT_SUCCESS;
 }

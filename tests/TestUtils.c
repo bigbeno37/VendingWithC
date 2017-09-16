@@ -16,6 +16,8 @@ void iToStringCorrectlyReturnsNumber() {
     strcpy(buffer, "");
     iToString(buffer, 12, 2);
     sAssertThat("12 should return '12'", "12", buffer);
+
+    free(buffer);
 }
 
 /*

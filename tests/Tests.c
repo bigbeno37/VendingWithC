@@ -81,7 +81,7 @@ void run_tests() {
 
     getSizeWillCorrectlyReturnSize();
     getNodeWillCorrectlyReturnNode();
-    nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists();
+    getStockWithIDWillCorrectlyReturnStockIfExists();
     addNodeWillCorrectlyPositionAddedNode();
     removeNodeWillCorrectlyRemoveNodeFromSystem();
 

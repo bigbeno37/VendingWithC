@@ -3,7 +3,7 @@
 
 void getSizeWillCorrectlyReturnSize();
 void getNodeWillCorrectlyReturnNode();
-void nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists();
+void getStockWithIDWillCorrectlyReturnStockIfExists();
 void addNodeWillCorrectlyPositionAddedNode();
 void removeNodeWillCorrectlyRemoveNodeFromSystem();
 

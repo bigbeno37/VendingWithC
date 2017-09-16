@@ -1,6 +1,7 @@
 #include "../vm_coin.h"
 #include "Tests.h"
 #include "../vm_stock.h"
+#include "../vm_options.h"
 
 /*
  * Determine if getListSize will accurately reflect the size
@@ -9,12 +10,16 @@
 void getSizeWillCorrectlyReturnSize() {
     /* Create a new list and stock item */
     List *list = malloc(sizeof(List));
-    Stock *stock = malloc(sizeof(Stock)), *secondStock = malloc(sizeof(Stock)),
-        *thirdStock = malloc(sizeof(Stock));
+    Stock *stock = malloc(sizeof(Stock)),
+            *secondStock = malloc(sizeof(Stock)),
+            *thirdStock = malloc(sizeof(Stock));
+    VmSystem system;
     list->head = NULL;
     strcpy(stock->id, "I0001");
     strcpy(secondStock->id, "I0002");
     strcpy(thirdStock->id, "I0003");
+
+    system.itemList = list;
 
     iAssertThat("Before adding a node, list size is 0", 0, getListSize(list));
 
@@ -27,10 +32,7 @@ void getSizeWillCorrectlyReturnSize() {
 
     iAssertThat("After adding 3 nodes, the size of the list should be 3", 3, getListSize(list));
 
-    free(list);
-    free(stock);
-    free(secondStock);
-    free(thirdStock);
+    systemFree(&system);
 }
 
 /*
@@ -38,8 +40,13 @@ void getSizeWillCorrectlyReturnSize() {
  */
 void getNodeWillCorrectlyReturnNode() {
     List *list = malloc(sizeof(List));
-    Stock *stock = malloc(sizeof(Stock)), *newStock = malloc(sizeof(Stock));
+    Stock *stock = malloc(sizeof(Stock)),
+            *newStock = malloc(sizeof(Stock));
+    VmSystem system;
     list->head = NULL;
+    list->size = 0;
+
+    system.itemList = list;
 
     strcpy(stock->id, "I0001");
 
@@ -54,19 +61,20 @@ void getNodeWillCorrectlyReturnNode() {
     sAssertThat("After adding two nodes, I can retrieve the second node",
                 "I0002", getNthNode(list, 2)->data->id);
 
-    free(list);
-    free(stock);
-    free(newStock);
+    systemFree(&system);
 }
 
 /*
  * Determine if getStockWithID will correctly return the node with ID
  * specified, and if not, will return NULL
  */
-void nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists() {
+void getStockWithIDWillCorrectlyReturnStockIfExists() {
     List *list = malloc(sizeof(List));
     Stock *stock = malloc(sizeof(Stock)), *newStock = malloc(sizeof(Stock));
+    VmSystem system;
     list->head = NULL;
+    list->size = 0;
+    system.itemList = list;
 
     strcpy(stock->id, "I0001");
     strcpy(newStock->id, "I0002");
@@ -81,9 +89,7 @@ void nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists() {
     assertNotNull("After adding stock with ID I0002, it will now exist",
                   getStockWithID("I0002", list));
 
-    free(list);
-    free(stock);
-    free(newStock);
+    systemFree(&system);
 }
 
 /*
@@ -92,11 +98,15 @@ void nodeWithIDExistsWillCorrectlyReturnIfSpecifiedNodeExists() {
  */
 void addNodeWillCorrectlyPositionAddedNode() {
     List *list = malloc(sizeof(List));
-    Stock *firstStock = malloc(sizeof(Stock)), *fifthStock = malloc(sizeof(Stock)),
-    *secondStock = malloc(sizeof(Stock));
+    Stock *firstStock = malloc(sizeof(Stock)),
+            *fifthStock = malloc(sizeof(Stock)),
+            *secondStock = malloc(sizeof(Stock));
+    VmSystem system;
 
     list->head = NULL;
     list->size = 0;
+
+    system.itemList = list;
 
     strcpy(firstStock->id, "I0001");
 
@@ -116,10 +126,7 @@ void addNodeWillCorrectlyPositionAddedNode() {
     sAssertThat("After adding the second stock, the third node will have ID I0005",
         "I0005", getNthNode(list, 3)->data->id);
 
-    free(list);
-    free(firstStock);
-    free(fifthStock);
-    free(secondStock);
+    systemFree(&system);
 }
 
 /*
@@ -127,9 +134,14 @@ void addNodeWillCorrectlyPositionAddedNode() {
  */
 void removeNodeWillCorrectlyRemoveNodeFromSystem() {
     List *list = malloc(sizeof(List));
-    Stock *firstStock = malloc(sizeof(Stock)), *secondStock = malloc(sizeof(Stock)),
-        *thirdStock = malloc(sizeof(Stock));
+    Stock *firstStock = malloc(sizeof(Stock)),
+            *secondStock = malloc(sizeof(Stock)),
+            *thirdStock = malloc(sizeof(Stock));
+    VmSystem system;
     list->head = NULL;
+    list->size = 0;
+
+    system.itemList = list;
 
     strcpy(firstStock->id, "I0001");
     strcpy(secondStock->id, "I0002");
@@ -149,9 +161,7 @@ void removeNodeWillCorrectlyRemoveNodeFromSystem() {
     removeNode("I0002", list);
     sAssertThat("After removing the second node, the new second node will have ID I0003",
         "I0003", getNthNode(list, 2)->data->id);
+    addNode(list, secondStock);
 
-    free(list);
-    free(firstStock);
-    free(secondStock);
-    free(thirdStock);
+    systemFree(&system);
 }

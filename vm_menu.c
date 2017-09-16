@@ -58,7 +58,7 @@ void initMenu(MenuItem * menu)
  **/
 MenuFunction getMenuChoice(MenuItem * menu)
 {
-    char *choiceStr = "";
+    char choiceStr[CHOICE_SIZE] = "";
     int choice;
 
     getUserInput(choiceStr, CHOICE_SIZE);

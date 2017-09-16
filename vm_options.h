@@ -22,7 +22,7 @@ void resetStock(VmSystem * system);
 void resetCoins(VmSystem * system);
 void abortProgram(VmSystem * system);
 
-void *createStockFromLine(char *line, Stock *newStock);
+void createStockFromLine(char *line, Stock *newStock);
 void createLineFromStock(Stock *stock, char *outputLine);
 
 /*
