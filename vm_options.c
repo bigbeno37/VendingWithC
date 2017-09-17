@@ -431,7 +431,7 @@ void addItem(VmSystem * system)
                                         system->itemList->size)->data->id)+1;
     Price amount;
     char name[NAME_LEN] = "", description[DESC_LEN] = "",
-            price[PRICE_LEN] = "", buffer[ID_LEN] = "",
+            price[PRICE_LEN+1] = "", buffer[ID_LEN] = "",
             *dollars, *cents;
     Stock *newStock = malloc(sizeof(Stock));
 
@@ -464,7 +464,7 @@ void addItem(VmSystem * system)
      *
      *
      */
-    getUserInput(price, PRICE_LEN);
+    getUserInput(price, sizeof(price));
 
     if (strcmp(price, EMPTY_STRING) == 0) {
         return;
@@ -481,12 +481,14 @@ void addItem(VmSystem * system)
                 amount.dollars = (unsigned int) toInt(dollars);
                 amount.cents = (unsigned int) toInt(cents);
 
-                break;
+                if (amount.dollars < 10 || (amount.dollars == 10 && amount.cents == 0)) {
+                    break;
+                }
             }
         }
 
         printf("Price entered was invalid! Please enter a valid price: ");
-        getUserInput(price, PRICE_LEN);
+        getUserInput(price, sizeof(price));
     }
 
     strcpy(newStock->id, generatedID);
@@ -507,11 +509,11 @@ void addItem(VmSystem * system)
  **/
 void removeItem(VmSystem * system)
 {
-    char id[ID_LEN] = "";
+    char id[ID_LEN+EXTRA_SPACES] = "";
     Stock *toBeRemoved;
 
     printf("Enter the item id of the item to remove from the menu: ");
-    getUserInput(id, ID_LEN);
+    getUserInput(id, sizeof(id));
 
     if (strcmp(id, EMPTY_STRING) == 0) {
         return;
@@ -529,6 +531,7 @@ void removeItem(VmSystem * system)
            toBeRemoved->id, toBeRemoved->name, toBeRemoved->desc);
 
     removeNode(id, system->itemList);
+    free(toBeRemoved);
 }
 
 /**
