@@ -71,22 +71,26 @@ int getDigits(int n) {
 /*
  * Return the user input to 'bufferSize' characters
  */
-void getUserInput(char *buffer, int bufferSize) {
-    while ( TRUE ) {
+void getUserInput( char *buffer, int charsToRead ) {
+    strcpy(buffer, "");
+
+    while (TRUE) {
         /* Get the input and store it in name */
-        fgets( buffer, bufferSize+EXTRA_SPACES, stdin );
+        fgets(buffer, charsToRead+EXTRA_SPACES, stdin);
 
         /* If name doesn't have a newline character (and thus the input was bigger than 20) */
         /* remove overflowed characters and ask for new input */
-        if ( !strchr( buffer, '\n' )) {
-            printf( "\nBuffer overflow! Please enter a valid choice: " );
+        if (!strchr( buffer, '\n' )) {
+            printf( "Buffer overflow! Please enter fewer characters: " );
             readRestOfLine();
+
+            continue;
         }
 
         break;
     }
 
-    buffer[strlen(buffer)-1] = '\0';
+    buffer[strlen(buffer) - 1] = '\0';
 }
 
 /*

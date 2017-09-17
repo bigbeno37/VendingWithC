@@ -19,7 +19,7 @@ void initMenu(MenuItem * menu)
     strcpy(purchaseItems.text, "Purchase Items");
     purchaseItems.function = purchaseItem;
 
-    strcpy(exit.text, "Save amd Exit");
+    strcpy(exit.text, "Save and Exit");
     exit.function = saveAndExit;
 
     strcpy(add.text, "Add Item");
@@ -58,11 +58,29 @@ void initMenu(MenuItem * menu)
  **/
 MenuFunction getMenuChoice(MenuItem * menu)
 {
-    char choiceStr[CHOICE_SIZE] = "";
-    int choice;
+    char choiceStr[1 + NEW_LINE_SPACE];
+    int choice = 0;
+/*
+    while (choice == 0) {
+        strcpy(choiceStr, "");
+        getUserInput(choiceStr, CHOICE_SIZE);
+        choice = toInt(choiceStr);
 
+        if (strcmp(choiceStr, "") == 0) {
+            printf("\nSelect your option (1-9): ");
+        } else if(choice < 1 || choice > 9) {
+            printf("Invalid choice!");
+        }
+    }
+*/
     getUserInput(choiceStr, CHOICE_SIZE);
     choice = toInt(choiceStr);
+
+    while (choice < 1) {
+        printf("Invalid choice! Please enter a valid choice: ");
+        getUserInput(choiceStr, CHOICE_SIZE);
+        choice = toInt(choiceStr);
+    }
 
     return menu[choice-1].function;
 }

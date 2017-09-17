@@ -431,8 +431,8 @@ void addItem(VmSystem * system)
     int newID = getValueOfID(getNthNode(system->itemList,
                                         system->itemList->size)->data->id)+1;
     Price amount;
-    char *name = malloc(NAME_LEN), *description = malloc(DESC_LEN), *id = malloc(ID_LEN), *price = malloc(PRICE_LEN),
-        *buffer = malloc(ID_LEN);
+    char name[NAME_LEN] = "", description[DESC_LEN] = "",
+            id[ID_LEN] = "", price[PRICE_LEN] = "", buffer[ID_LEN] = "";
     Stock *newStock = malloc(sizeof(Stock));
 
     printf("This new meal item will have an ID of I%04d\n", newID);
@@ -471,12 +471,6 @@ void addItem(VmSystem * system)
 
     printf("This item \"%s - %s\" has now been added to the menu.\n",
         name, description);
-
-    free(name);
-    free(description);
-    free(id);
-    free(price);
-    free(buffer);
 }
 
 /**
@@ -485,7 +479,7 @@ void addItem(VmSystem * system)
  **/
 void removeItem(VmSystem * system)
 {
-    char *id = malloc(ID_LEN);
+    char id[ID_LEN] = "";
     Stock *toBeRemoved;
 
     printf("Enter the item id of the item to remove from the menu: ");
