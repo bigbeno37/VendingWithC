@@ -321,7 +321,7 @@ void displayItems(VmSystem * system)
 void purchaseItem(VmSystem * system)
 {
     Stock *stock;
-    char input[ID_LEN] = "", cashInput[PRICE_LEN] = "";
+    char input[ID_LEN] = "", cashInput[PRICE_LEN+NEW_LINE_SPACE] = "";
     int amountOwed, originalAmount;
     Price cashLeft, refund;
 
@@ -333,7 +333,6 @@ void purchaseItem(VmSystem * system)
 
     /* If the user inputs a newline, return to the menu */
     if (strcmp(input, EMPTY_STRING) == 0) {
-        puts("Returning to main menu...");
         return;
     }
 
@@ -432,10 +431,19 @@ void addItem(VmSystem * system)
                                         system->itemList->size)->data->id)+1;
     Price amount;
     char name[NAME_LEN] = "", description[DESC_LEN] = "",
-            id[ID_LEN] = "", price[PRICE_LEN] = "", buffer[ID_LEN] = "";
+            price[PRICE_LEN] = "", buffer[ID_LEN] = "",
+            *dollars, *cents;
     Stock *newStock = malloc(sizeof(Stock));
 
-    printf("This new meal item will have an ID of I%04d\n", newID);
+
+    char generatedID[ID_LEN+1] = "I";
+    /* The numerical value of the ID is only 4 digits, so subtract 1
+     * when passing it in */
+    iToString(buffer, newID, ID_LEN - 1);
+    strcat(generatedID, buffer);
+
+
+    printf("This new meal item will have an ID of %s\n", generatedID);
     printf("Enter the item name: ");
     getUserInput(name, NAME_LEN);
     if (strcmp(name, EMPTY_STRING) == 0) {
@@ -449,19 +457,39 @@ void addItem(VmSystem * system)
     }
 
     printf("Enter the price for this item: ");
+    /*
+     *
+     * IF price CONTAINS '.'
+     *
+     *
+     *
+     */
     getUserInput(price, PRICE_LEN);
-    amount = getPriceFromValue(toInt(price) * 100);
-    if (getDecimalValue(amount) == 0) {
+
+    if (strcmp(price, EMPTY_STRING) == 0) {
         return;
     }
+    while (TRUE) {
+        /* If the entered price has a . in it */
+        if (strchr(price, '.' )) {
+            dollars = strtok(price, ".");
+            cents = strtok(NULL, ".");
 
-    strcat(id, "I");
-    /* The numerical value of the ID is only 4 digits, so subtract 1
-     * when passing it in */
-    iToString(buffer, newID, ID_LEN - 1);
-    strcat(id, buffer);
+            if ((strlen(dollars) == 1 || strlen(dollars) == 2)
+                && strlen(cents) == 2) {
 
-    strcpy(newStock->id, id);
+                amount.dollars = (unsigned int) toInt(dollars);
+                amount.cents = (unsigned int) toInt(cents);
+
+                break;
+            }
+        }
+
+        printf("Price entered was invalid! Please enter a valid price: ");
+        getUserInput(price, PRICE_LEN);
+    }
+
+    strcpy(newStock->id, generatedID);
     strcpy(newStock->name, name);
     strcpy(newStock->desc, description);
     newStock->price = amount;

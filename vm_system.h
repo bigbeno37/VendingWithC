@@ -26,7 +26,7 @@
 /*
  * The max length of the price of an item
  */
-#define PRICE_LEN 5
+#define PRICE_LEN 4
 
 /*
  * The max length of the quantity of an item
