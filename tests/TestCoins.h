@@ -4,5 +4,6 @@
 void isValidDenominationWillDetermineValidDenomination();
 void getDecimalValueWillCorrectlyDetermineCorrectValue();
 void getPriceFromValueWillCorrectlyReturnPrice();
+void getCoinFromLineWillCorrectlyReturnCoin();
 
 #endif

@@ -16,15 +16,19 @@
  * found in the coins array
  */
 Boolean isValidDenomination(char *value, VmSystem *system) {
-    int i, coinValue = toInt(value);
-
-    for (i = 0; i < LEN(system->cashRegister); i++) {
-        if (coinValue == system->cashRegister[i].count) {
+    switch(toInt(value)) {
+        case 5:
+        case 10:
+        case 20:
+        case 50:
+        case 100:
+        case 200:
+        case 500:
+        case 1000:
             return TRUE;
-        }
+        default:
+            return FALSE;
     }
-
-    return FALSE;
 }
 
 /*
@@ -44,4 +48,40 @@ Price getPriceFromValue(int amountOfCents) {
     price.cents = amountOfCents - price.dollars * 100;
 
     return price;
+}
+
+void getCoinFromLine(char *line, Coin *newCoin) {
+    char *denomination = strtok(line, COIN_DELIM);
+    char *count = strtok(NULL, COIN_DELIM);
+
+    switch(toInt(denomination)) {
+        case 5:
+            newCoin->denom = FIVE_CENTS;
+            break;
+        case 10:
+            newCoin->denom = TEN_CENTS;
+            break;
+        case 20:
+            newCoin->denom = TWENTY_CENTS;
+            break;
+        case 50:
+            newCoin->denom = FIFTY_CENTS;
+            break;
+        case 100:
+            newCoin->denom = ONE_DOLLAR;
+            break;
+        case 200:
+            newCoin->denom = TWO_DOLLARS;
+            break;
+        case 500:
+            newCoin->denom = FIVE_DOLLARS;
+            break;
+        case 1000:
+            newCoin->denom = TEN_DOLLARS;
+            break;
+        default:
+            break;
+    }
+
+    newCoin->count = (unsigned int) toInt(count);
 }

@@ -9,7 +9,7 @@
  */
 void isValidDenominationWillDetermineValidDenomination() {
     VmSystem system;
-    loadCoins(&system, "");
+    loadCoins(&system, "coins.dat");
 
     assertTrue("5 is a valid denomination", isValidDenomination("5", &system));
     assertTrue("10 is a valid denomination", isValidDenomination("10", &system));
@@ -51,4 +51,24 @@ void getPriceFromValueWillCorrectlyReturnPrice() {
     cash = 78;
     iAssertThat("Given 78 cents, there will be 0 dollars", 0, getPriceFromValue(cash).dollars);
     iAssertThat("Given 78 cents, there will be 78 cents", 78, getPriceFromValue(cash).cents);
+}
+
+/*
+ * Determine if getCoinFromLine will return a correctly
+ * instantiated Coin instance
+ */
+void getCoinFromLineWillCorrectlyReturnCoin() {
+    char input[] = "1000,3";
+    Coin coin;
+
+    getCoinFromLine(input, &coin);
+
+    iAssertThat("1000,3 will have count 3", 3, coin.count);
+    iAssertThat("1000,3 will have denomination TEN_DOLLARS", TEN_DOLLARS, coin.denom);
+
+    strcpy(input, "5,99");
+    getCoinFromLine(input, &coin);
+
+    iAssertThat("5,99 will have count 99", 99, coin.count);
+    iAssertThat("5,99 will have denomination FIVE_CENTS", FIVE_CENTS, coin.denom);
 }

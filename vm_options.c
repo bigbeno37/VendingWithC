@@ -50,10 +50,13 @@ void systemFree(VmSystem * system)
 Boolean loadData(
     VmSystem * system, const char * stockFileName, const char * coinsFileName)
 {
+    system->stockFileName = stockFileName;
+    system->coinFileName = coinsFileName;
+
     loadStock(system, stockFileName);
     loadCoins(system, coinsFileName);
 
-    return FALSE;
+    return TRUE;
 }
 
 /**
@@ -167,45 +170,28 @@ void createLineFromStock(Stock *stock, char *outputLine) {
  **/
 Boolean loadCoins(VmSystem * system, const char * fileName)
 {
-    /* TODO
-     Load in denominations from file */
-    Coin fiveCents, tenCents, twentyCents, fiftyCents, oneDollar,
-    twoDollars, fiveDollars, tenDollars;
+    FILE *coinFile;
+    char coinLine[MAX_COIN_LINE_LEN];
+    int i;
 
-    fiveCents.count = 5;
-    fiveCents.denom = FIVE_CENTS;
+    if (!fileExists(fileName)) {
+        puts("Error: File not found!");
 
-    tenCents.count = 10;
-    tenCents.denom = TEN_CENTS;
+        return FALSE;
+    }
 
-    twentyCents.count = 20;
-    twentyCents.denom = TWENTY_CENTS;
+    /* Open the file for read only access */
+    coinFile = fopen(fileName, "r");
 
-    fiftyCents.count = 50;
-    fiftyCents.denom = FIFTY_CENTS;
+    /* While there is another line to read, continue reading lines
+     * and generating Coin instances from them*/
+    for (i=0; fgets(coinLine, MAX_COIN_LINE_LEN, coinFile) != NULL; i++) {
+        getCoinFromLine(coinLine, &system->cashRegister[i]);
+    }
 
-    oneDollar.count = 100;
-    oneDollar.denom = ONE_DOLLAR;
+    fclose(coinFile);
 
-    twoDollars.count = 200;
-    twoDollars.denom = TWO_DOLLARS;
-
-    fiveDollars.count = 500;
-    fiveDollars.denom = FIVE_DOLLARS;
-
-    tenDollars.count = 1000;
-    tenDollars.denom = TEN_DOLLARS;
-
-    system->cashRegister[0] = fiveCents;
-    system->cashRegister[1] = tenCents;
-    system->cashRegister[2] = twentyCents;
-    system->cashRegister[3] = fiftyCents;
-    system->cashRegister[4] = oneDollar;
-    system->cashRegister[5] = twoDollars;
-    system->cashRegister[6] = fiveDollars;
-    system->cashRegister[7] = tenDollars;
-
-    return FALSE;
+    return TRUE;
 }
 
 /**

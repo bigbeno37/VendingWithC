@@ -22,6 +22,18 @@ int main(int argc, char ** argv)
         puts("Error! Stock file not found!");
         exit(1);
     }
+
+    /* If the user didn't supply any arguments, halt the program */
+    if (argv[2] == NULL) {
+        puts("Error! Coins file must be specified!");
+
+        exit(1);
+
+        /* Otherwise, if the path provided is inaccurate, halt the program */
+    } else if(!fileExists(argv[2])) {
+        puts("Error! Coins file not found!");
+        exit(1);
+    }
     /* If there was a path passed in as an argument and the file
      * exists, continue with execution */
 
@@ -29,11 +41,9 @@ int main(int argc, char ** argv)
         run_tests();
     }
 
-    system.stockFileName = argv[1];
-
     initMenu(menu);
     systemInit(&system);
-    loadData(&system, system.stockFileName, "coins.dat");
+    loadData(&system, argv[1], argv[2]);
 
     /* The main loop of the program, and is where the user
      * can call the various functions available */

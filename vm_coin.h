@@ -14,4 +14,6 @@ Boolean isValidDenomination(char *value, VmSystem *system);
 int getDecimalValue(Price price);
 Price getPriceFromValue(int amountOfCents);
 
+void getCoinFromLine(char *line, Coin *coin);
+
 #endif

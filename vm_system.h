@@ -44,6 +44,12 @@
  */
 #define MAX_STOCK_LINE_LEN (ID_LEN + NAME_LEN + DESC_LEN + PRICE_LEN + ITEM_LEN + STOCK_SEPERATORS + 1)
 
+/*
+ * The maximum length of a valid line of input for a coin file
+ * +1 to include a newline character
+ */
+#define MAX_COIN_LINE_LEN (7 + 1)
+
 /**
  * A structure to represent a price. One of the problems with the floating
  * point formats in C like float and double is that they have minor issues

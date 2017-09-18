@@ -94,6 +94,7 @@ void run_tests() {
     getDecimalValueWillCorrectlyDetermineCorrectValue();
     getPriceFromValueWillCorrectlyReturnPrice();
     getValueOfIDCorrectlyReturnsValue();
+    getCoinFromLineWillCorrectlyReturnCoin();
 
     if(!allTestsPassed) {
         puts("There were errors running tests!");
