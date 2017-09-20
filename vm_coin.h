@@ -20,5 +20,6 @@ Boolean changeCanBeGiven(Price price, VmSystem *system);
 void addCoin(Denomination denom, VmSystem *system);
 Denomination toDenom(int value);
 Coin *getCoin(Denomination denom, VmSystem *system);
+void getLineFromCoin(Coin coin, char *line);
 
 #endif

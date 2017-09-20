@@ -90,7 +90,6 @@ void run_tests() {
     createLineFromStockCorrectlyFormatsLine();
     saveStockCorrectlyUpdatesStockFile();
 
-    isValidDenominationWillDetermineValidDenomination();
     getDecimalValueWillCorrectlyDetermineCorrectValue();
     getPriceFromValueWillCorrectlyReturnPrice();
     getValueOfIDCorrectlyReturnsValue();

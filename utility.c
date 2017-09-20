@@ -44,13 +44,6 @@ void printNCharacters(int n, char *string) {
 }
 
 /*
- * Utilising the method above, print N amounts of spaces
- */
-void printNSpaces(int n) {
-    printNCharacters(n, " ");
-}
-
-/*
  * Utilising the method above, print N amounts of dashes
  */
 void printNDashes(int n) {
@@ -63,9 +56,15 @@ void printNDashes(int n) {
 int getDigits(int n) {
     if (n < 10) {
         return 1;
+    } else if (n < 100) {
+        return 2;
+    } else if (n < 1000) {
+        return 3;
+    } else if (n < 10000) {
+        return 4;
     }
 
-    return 2;
+    return 0;
 }
 
 /*

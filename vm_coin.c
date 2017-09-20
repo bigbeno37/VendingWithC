@@ -77,6 +77,32 @@ Denomination toDenom(int value) {
 }
 
 /*
+ * Converts a Denomination into its respective cents form
+ */
+int denomToValue(Denomination denom) {
+    switch (denom) {
+        case FIVE_CENTS:
+            return 5;
+        case TEN_CENTS:
+            return 10;
+        case TWENTY_CENTS:
+            return 20;
+        case FIFTY_CENTS:
+            return 50;
+        case ONE_DOLLAR:
+            return 100;
+        case TWO_DOLLARS:
+            return 200;
+        case FIVE_DOLLARS:
+            return 500;
+        case TEN_DOLLARS:
+            return 1000;
+        default:
+            return 0;
+    }
+}
+
+/*
  * Converts a line passed in to a Coin instance
  */
 void getCoinFromLine(char *line, Coin *newCoin) {
@@ -86,6 +112,24 @@ void getCoinFromLine(char *line, Coin *newCoin) {
     newCoin->denom = toDenom(toInt(denomination));
 
     newCoin->count = (unsigned int) toInt(count);
+}
+
+/*
+ * Creates a line from a passed in coin instance and writes to
+ * the line array also passed in
+ */
+void getLineFromCoin(Coin coin, char *line) {
+
+    char denoms[5], count[3];
+    int denomDigits = getDigits(denomToValue(coin.denom));
+    iToString(denoms, denomToValue(coin.denom), denomDigits);
+
+    strcat(line, denoms);
+    strcat(line, ",");
+
+    iToString(count, coin.count, getDigits(coin.count));
+
+    strcat(line, count);
 }
 
 /*

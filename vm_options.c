@@ -171,7 +171,7 @@ void createLineFromStock(Stock *stock, char *outputLine) {
 Boolean loadCoins(VmSystem * system, const char * fileName)
 {
     FILE *coinFile;
-    char coinLine[MAX_COIN_LINE_LEN];
+    char coinLine[MAX_COIN_LINE_LEN] = "";
     int i;
 
     if (!fileExists(fileName)) {
@@ -186,6 +186,11 @@ Boolean loadCoins(VmSystem * system, const char * fileName)
     /* While there is another line to read, continue reading lines
      * and generating Coin instances from them*/
     for (i=0; fgets(coinLine, MAX_COIN_LINE_LEN, coinFile) != NULL; i++) {
+
+        if (strcmp(coinLine, "\n") == 0) {
+            break;
+        }
+
         getCoinFromLine(coinLine, &system->cashRegister[i]);
     }
 
@@ -227,7 +232,25 @@ Boolean saveStock(VmSystem * system)
  **/
 Boolean saveCoins(VmSystem * system)
 {
-    return FALSE;
+    FILE *file;
+    int i;
+
+    /* Remove the coin file */
+    remove(system->coinFileName);
+
+    /* Recreate coin file and open for read / write access */
+    file = fopen(system->coinFileName, "w+");
+
+    for (i = 0; i < LEN(system->cashRegister); i++) {
+        char outputLine[MAX_COIN_LINE_LEN] = "";
+        getLineFromCoin(system->cashRegister[i], outputLine);
+
+        fprintf(file, "%s\n", outputLine);
+    }
+
+    fclose(file);
+
+    return TRUE;
 }
 
 /**
