@@ -15,5 +15,10 @@ int getDecimalValue(Price price);
 Price getPriceFromValue(int amountOfCents);
 
 void getCoinFromLine(char *line, Coin *coin);
+void printChange(Price price, VmSystem *system);
+Boolean changeCanBeGiven(Price price, VmSystem *system);
+void addCoin(Denomination denom, VmSystem *system);
+Denomination toDenom(int value);
+Coin *getCoin(Denomination denom, VmSystem *system);
 
 #endif

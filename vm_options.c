@@ -269,16 +269,8 @@ void displayItems(VmSystem * system)
         }
     }
 
-    /* Print each column with the respective spacing required */
-    printf("ID");
-    printNSpaces((int) (idLength - strlen("ID")));
-    printf(" | Name");
-    printNSpaces((int) (nameLength - strlen("Name")));
-    printf(" | Available");
-    printNSpaces((int) (quantityLength - strlen("Available")));
-    printf(" | Price");
-    printNSpaces((int) (priceLength - strlen("Price")));
-    puts(EMPTY_STRING);
+    printf("%-*s | %-*s | %-*s | %-*s\n", idLength, "ID", nameLength, "Name",
+           quantityLength, "Available", priceLength, "Price");
 
     /* Print the dashes to separate the heading from the data */
     printNDashes(idLength + nameLength + quantityLength + priceLength + COLUMN_SPACES);
@@ -289,14 +281,8 @@ void displayItems(VmSystem * system)
     for (i = 1; i <= system->itemList->size; i++) {
         Stock *currentStock = getNthNode(system->itemList, i)->data;
 
-        printf("%s", currentStock->id);
-        printNSpaces((int) (idLength - strlen(currentStock->id)));
-        printf(" | %s", currentStock->name);
-        printNSpaces((int) (nameLength - strlen(currentStock->name)));
-        printf(" | %d", currentStock->onHand);
-        printNSpaces(quantityLength - getDigits(currentStock->onHand));
-        printf(" | $ %d.%02d", currentStock->price.dollars, currentStock->price.cents);
-        puts(EMPTY_STRING);
+        printf("%-*s | %-*s | %-*d | %d.%02d\n", idLength, currentStock->id, nameLength, currentStock->name,
+               quantityLength, currentStock->onHand, currentStock->price.dollars, currentStock->price.cents);
     }
 }
 
@@ -309,7 +295,7 @@ void purchaseItem(VmSystem * system)
     Stock *stock;
     char input[ID_LEN] = "", cashInput[PRICE_LEN+NEW_LINE_SPACE] = "";
     int amountOwed, originalAmount;
-    Price cashLeft, refund;
+    Price cashLeft, refund, change;
 
     puts("Purchase item");
     puts("-------------");
@@ -348,8 +334,15 @@ void purchaseItem(VmSystem * system)
                     if (originalAmount-amountOwed > 0) {
                         refund = getPriceFromValue(originalAmount-amountOwed);
 
-                        printf("Order cancelled. Here is your $%d.%02d back.\n",
-                               refund.dollars, refund.cents);
+                        if (changeCanBeGiven(refund, system)) {
+                            printf("Order cancelled. Here is your $%d.%02d back:",
+                                   refund.dollars, refund.cents);
+
+                            printChange(refund, system);
+                        } else {
+                            printf("Unable to give correct change. Order cancelled.\n"
+                                           "Here is your $%d.%02d back.\n", refund.dollars, refund.cents);
+                        }
                     } else {
                         puts("Order cancelled.");
                     }
@@ -359,6 +352,7 @@ void purchaseItem(VmSystem * system)
 
                 if (isValidDenomination(cashInput, system)) {
                     amountOwed -= toInt(cashInput);
+                    addCoin(toDenom(toInt(cashInput)), system);
                     cashLeft = getPriceFromValue(amountOwed);
                 } else {
                     Price cashEntered = getPriceFromValue(toInt(cashInput));
@@ -368,17 +362,22 @@ void purchaseItem(VmSystem * system)
                 }
             }
 
-            stock->onHand = stock->onHand - 1;
+            change = getPriceFromValue(-1*amountOwed);
 
-            printf("Thank you. Here is your %s", stock->name);
+            if (amountOwed == 0) {
+                printf("Thank you. Here is your %s", stock->name);
 
-            if (amountOwed < 0) {
-                Price change = getPriceFromValue(-1*amountOwed);
+                stock->onHand--;
+            } else if (amountOwed < 0 && changeCanBeGiven(change, system)) {
+                printf("Thank you. Here is your %s, and your change of $%d.%02d:",
+                       stock->name, change.dollars, change.cents);
 
-                printf(", and your change of $%d.%02d", change.dollars, change.cents);
+                printChange(change, system);
+                puts(".\nPlease come back soon.");
+            } else {
+                printf("Unable to give correct change. Order cancelled.\n"
+                               "Here is your $%d.%02d back.\n", change.dollars, change.cents);
             }
-
-            puts(".\nPlease come back soon.");
         } else {
             puts("We're out of stock on that item sorry!");
         }
@@ -443,13 +442,6 @@ void addItem(VmSystem * system)
     }
 
     printf("Enter the price for this item: ");
-    /*
-     *
-     * IF price CONTAINS '.'
-     *
-     *
-     *
-     */
     getUserInput(price, sizeof(price));
 
     if (strcmp(price, EMPTY_STRING) == 0) {
@@ -527,7 +519,18 @@ void removeItem(VmSystem * system)
  * specifications.
  **/
 void displayCoins(VmSystem * system)
-{ }
+{
+
+    printf("Denomination | Count\n");
+    printf("%-*s | %d\n", DENOM_COL_LEN, "5 cents", getCoin(toDenom(5), system)->count);
+    printf("%-*s | %d\n", DENOM_COL_LEN, "10 cents", getCoin(toDenom(10), system)->count);
+    printf("%-*s | %d\n", DENOM_COL_LEN, "20 cents", getCoin(toDenom(20), system)->count);
+    printf("%-*s | %d\n", DENOM_COL_LEN, "50 cents", getCoin(toDenom(50), system)->count);
+    printf("%-*s | %d\n", DENOM_COL_LEN, "1 dollar", getCoin(toDenom(100), system)->count);
+    printf("%-*s | %d\n", DENOM_COL_LEN, "2 dollars", getCoin(toDenom(200), system)->count);
+    printf("%-*s | %d\n", DENOM_COL_LEN, "5 dollars", getCoin(toDenom(500), system)->count);
+    printf("%-*s | %d\n", DENOM_COL_LEN, "10 dollars", getCoin(toDenom(1000), system)->count);
+}
 
 /**
  * This option will require you to iterate over every stock in the
@@ -554,7 +557,15 @@ void resetStock(VmSystem * system)
  * assignment specifications.
  **/
 void resetCoins(VmSystem * system)
-{ }
+{
+    int i;
+
+    for (i = 0; i < LEN(system->cashRegister); i++) {
+        system->cashRegister[i].count = DEFAULT_COIN_COUNT;
+    }
+
+    printf("All coins have been reset to the default level of %d\n", DEFAULT_COIN_COUNT);
+}
 
 /**
  * This option will require you to display goodbye and free the system.

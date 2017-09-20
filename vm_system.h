@@ -50,6 +50,11 @@
  */
 #define MAX_COIN_LINE_LEN (7 + 1)
 
+/*
+ * The maximum length of a denomination column
+ */
+#define DENOM_COL_LEN 12
+
 /**
  * A structure to represent a price. One of the problems with the floating
  * point formats in C like float and double is that they have minor issues
