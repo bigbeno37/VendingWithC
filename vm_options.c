@@ -259,10 +259,11 @@ Boolean saveCoins(VmSystem * system)
  **/
 void displayItems(VmSystem * system)
 {
-    int i;
+    int i, j;
     /* Amount of characters in each word */
     int idLength = 2, nameLength = 4, quantityLength = 9, priceLength = 5;
     int currentIDLength, currentNameLength, currentQuantityLength, currentPriceLength;
+    Stock **stock = malloc(system->itemList->size * sizeof(Stock));
 
     printf("Items Menu\n\n");
 
@@ -299,14 +300,34 @@ void displayItems(VmSystem * system)
     printNDashes(idLength + nameLength + quantityLength + priceLength + COLUMN_SPACES);
     puts(EMPTY_STRING);
 
+    /* Add all current node stocks to the stock array */
+    for (i = 1; i <= system->itemList->size; i++) {
+        stock[i-1] = getNthNode(system->itemList, i)->data;
+    }
+
+    /* Sort the stocks array by name alphabetically */
+    for (i = 0; i < system->itemList->size; i++) {
+        for (j = i + 1; j < system->itemList->size; j++) {
+            /* If the second stock's name is higher alphabetically,
+             * swap the two stocks around in the array */
+            if (strcmp(stock[i]->name, stock[j]->name) > 0) {
+                Stock *temp = stock[i];
+                stock[i] = stock[j];
+                stock[j] = temp;
+            }
+        }
+    }
+
     /* Print out each stock item on their own row, showing ID, stock amount,
      * quantity, and price */
-    for (i = 1; i <= system->itemList->size; i++) {
-        Stock *currentStock = getNthNode(system->itemList, i)->data;
+    for (i = 0; i < system->itemList->size; i++) {
+        Stock *currentStock = stock[i];
 
         printf("%-*s | %-*s | %-*d | %d.%02d\n", idLength, currentStock->id, nameLength, currentStock->name,
                quantityLength, currentStock->onHand, currentStock->price.dollars, currentStock->price.cents);
     }
+
+    free(stock);
 }
 
 /**
@@ -388,7 +409,7 @@ void purchaseItem(VmSystem * system)
             change = getPriceFromValue(-1*amountOwed);
 
             if (amountOwed == 0) {
-                printf("Thank you. Here is your %s", stock->name);
+                printf("Thank you. Here is your %s\n", stock->name);
 
                 stock->onHand--;
             } else if (amountOwed < 0 && changeCanBeGiven(change, system)) {
@@ -397,6 +418,8 @@ void purchaseItem(VmSystem * system)
 
                 printChange(change, system);
                 puts(".\nPlease come back soon.");
+
+                stock->onHand--;
             } else {
                 printf("Unable to give correct change. Order cancelled.\n"
                                "Here is your $%d.%02d back.\n", change.dollars, change.cents);
