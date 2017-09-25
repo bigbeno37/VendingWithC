@@ -35,7 +35,6 @@ typedef enum boolean
 void readRestOfLine();
 
 Boolean fileExists(const char *file);
-void printNSpaces(int n);
 void printNDashes(int n);
 int getDigits(int n);
 void getUserInput(char *buffer, int bufferSize);
