@@ -1,3 +1,15 @@
+/**************************************************************
+
+** Student Name: Ben O'Sullivan
+
+** Student Number: s3662617
+
+** Date of submission: Wednesday, 27 Sept 2017
+
+** Course: COSC1076 / COSC2207, Semester 2, 2017
+
+***************************************************************/
+
 #include "vm_options.h"
 #include "vm_stock.h"
 #include "utility.h"
@@ -133,11 +145,11 @@ void createLineFromStock(Stock *stock, char *outputLine) {
     char cents[PRICE_LEN], dollars[PRICE_LEN], quantity[3];
 
     strcat(outputLine, stock->id);
-    strcat(outputLine, "|");
+    strcat(outputLine, STOCK_DELIM);
     strcat(outputLine, stock->name);
-    strcat(outputLine, "|");
+    strcat(outputLine, STOCK_DELIM);
     strcat(outputLine, stock->desc);
-    strcat(outputLine, "|");
+    strcat(outputLine, STOCK_DELIM);
     /* Amount of dollars must not exceed two digits */
 
     if (stock->price.dollars < 10) {

@@ -1,3 +1,15 @@
+# **************************************************************
+#
+# ** Student Name: Ben O'Sullivan
+#
+# ** Student Number: s3662617
+#
+# ** Date of submission: Wednesday, 27 Sept 2017
+#
+# ** Course: COSC1076 / COSC2207, Semester 2, 2017
+#
+# ***************************************************************
+
 SOURCES=utility.c vm.c vm_coin.c vm_menu.c vm_options.c vm_stock.c
 HEADERS=utility.h vm.h vm_coin.h vm_menu.h vm_options.h vm_stock.h vm_system.h
 OBJECTS=vm.o vm_menu.o vm_coin.o vm_stock.o vm_options.o utility.o TestCoins.o TestData.o TestLinkedList.o Tests.o TestUtils.o

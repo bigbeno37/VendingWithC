@@ -1,7 +1,18 @@
+/**************************************************************
+
+** Student Name: Ben O'Sullivan
+
+** Student Number: s3662617
+
+** Date of submission: Wednesday, 27 Sept 2017
+
+** Course: COSC1076 / COSC2207, Semester 2, 2017
+
+***************************************************************/
+
 #include "TestData.h"
 #include "../vm_options.h"
 #include "Tests.h"
-#include "../vm_stock.h"
 
 /*
  * Determine if createStockFromLine will correctly return a Stock instance
